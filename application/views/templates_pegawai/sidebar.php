@@ -63,7 +63,7 @@
             <i class="fa fa-bars"></i>
           </button>
 
-          <h6 class="font-weight-bold">Institusi Pemerintah<br /><?php echo date('l, d-m-Y'); ?></h6>
+          <h6 class="font-weight-bold">MTS Nurul Mubtadiin<br /><?php echo date('l, d-m-Y'); ?></h6>
           <!-- Topbar Navbar -->
           <ul class="navbar-nav ml-auto">
 

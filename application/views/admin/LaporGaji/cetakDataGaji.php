@@ -17,7 +17,7 @@
 <body>
 
   <center>
-    <h1>Institusi Pemerintah</h1>
+    <h1>MTS Nurul Mubtadiin</h1>
     <h2>Daftar Gaji Pegawai</h2>
   </center>
 

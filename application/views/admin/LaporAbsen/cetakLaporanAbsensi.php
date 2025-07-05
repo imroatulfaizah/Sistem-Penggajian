@@ -16,7 +16,7 @@
 <body>
 
   <center>
-    <h1>Institusi Pemerintah</h1>
+    <h1>MTS Nurul Mubtadiin</h1>
     <h2>Laporan Kehadiran Pegawai</h2>
   </center>
 

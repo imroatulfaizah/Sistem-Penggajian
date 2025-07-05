@@ -30,7 +30,7 @@
               <div class="col-lg-12">
                 <div class="p-5">
                   <div class="text-center">
-                    <h1 class="h4 text-gray-900 mb-4">Website Penggajian <br> <b>Institusi Pemerintah</b></h1>
+                    <h1 class="h4 text-gray-900 mb-4">Website Penggajian <br> <b>MTS Nurul Mubtadiin</b></h1>
                   </div>
                   <?= $this->session->flashdata('pesan'); ?>
                   <form class="user" method="post" action="<?= base_url('welcome'); ?>">

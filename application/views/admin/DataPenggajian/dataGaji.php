@@ -119,13 +119,13 @@
             <td><?= $g->nama_pegawai; ?></td>
             <td><?= $g->jenis_kelamin; ?></td>
             <td><?= $g->nama_jabatan; ?></td>
-            <td>Rp. <?= number_format($g->gaji_pokok, 0, ',', '.'); ?>,-</td>
-            <td>Rp. <?= number_format($g->tj_transport, 0, ',', '.'); ?>,-</td>
-            <td>Rp. <?= number_format($g->uang_makan, 0, ',', '.'); ?>,-</td>
+            <td>Rp. <?= number_format($g->tunjangan_jabatan, 0, ',', '.'); ?>,-</td>
+            <td>Rp. <?= number_format($g->tunjangan_transport, 0, ',', '.'); ?>,-</td>
+            <td>Rp. <?= number_format($g->upah_mengajar, 0, ',', '.'); ?>,-</td>
             <td>Rp. <?= number_format($potongan, 0, ',', '.'); ?>,-</td>
             <?php    #jumlahkan seluruh gaji 
             ?>
-            <?php $total_gaji = $g->gaji_pokok + $g->tj_transport + $g->uang_makan - $potongan; ?>
+            <?php $total_gaji = $g->tunjangan_jabatan + $g->tunjangan_transport + $g->upah_mengajar; ?>
             <td>Rp. <?= number_format($total_gaji, 0, ',', '.'); ?>,-</td>
           </tr>
 

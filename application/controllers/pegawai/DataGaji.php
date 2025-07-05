@@ -23,8 +23,13 @@ class DataGaji extends CI_Controller
     $nip = $this->session->userdata('nip');
     // var_dump($nik);
     // die;
-    $data['potongan'] = $this->penggajianModel->get_data('potongan_gaji')->result();
-    $data['gaji'] = $this->db->query("SELECT data_pegawai.nama_pegawai, data_pegawai.nip, data_jabatan.gaji_pokok, data_jabatan.tj_transport, data_jabatan.uang_makan, data_kehadiran.alpha, data_kehadiran.bulan, data_kehadiran.id_kehadiran FROM data_pegawai INNER JOIN data_kehadiran ON data_kehadiran.nip=data_pegawai.nip INNER JOIN data_jabatan ON data_jabatan.nama_jabatan=data_pegawai.jabatan WHERE data_kehadiran.nip='$nip' ORDER BY data_kehadiran.bulan DESC")->result();
+    $data['kehadiran'] = $this->db->query("SELECT hadir FROM data_kehadiran WHERE nip = '$nip'")->result();
+    $data['jam'] = $this->db->query("SELECT SUM(total_jam) as total_jam FROM data_penempatan WHERE nip = '$nip'")->result();
+    $data['gaji'] = $this->db->query("SELECT data_pegawai.nama_pegawai, data_pegawai.nip, data_jabatan.tunjangan_jabatan, 
+    data_jabatan.tunjangan_transport, data_jabatan.upah_mengajar, data_kehadiran.alpha, data_kehadiran.bulan, data_kehadiran.id_kehadiran 
+    FROM data_pegawai INNER JOIN data_kehadiran ON data_kehadiran.nip=data_pegawai.nip 
+    INNER JOIN data_jabatan ON data_jabatan.id_jabatan=data_pegawai.jabatan 
+    WHERE data_kehadiran.nip='$nip' ORDER BY data_kehadiran.bulan DESC")->result();
     // var_dump($data);
     // die;
     $this->load->view('templates_pegawai/header', $data);
@@ -33,12 +38,16 @@ class DataGaji extends CI_Controller
     $this->load->view('templates_pegawai/footer');
   }
 
-  public function cetakSlip($id)
+  public function cetakSlip($nip)
   {
     $data['title'] = "Cetak Slip Gaji";
-    $data['potongan'] = $this->penggajianModel->get_data('potongan_gaji')->result();
+    $data['kehadiran'] = $this->db->query("SELECT hadir FROM data_kehadiran WHERE nip = '$nip'")->result();
+    $data['jam'] = $this->db->query("SELECT SUM(total_jam) as total_jam FROM data_penempatan WHERE nip = '$nip'")->result();
 
-    $data['print_slip'] = $this->db->query("SELECT data_pegawai.nip, data_pegawai.nama_pegawai, data_jabatan.nama_jabatan, data_jabatan.gaji_pokok, data_jabatan.tj_transport, data_jabatan.uang_makan, data_kehadiran.alpha, data_kehadiran.bulan FROM data_pegawai INNER JOIN data_kehadiran ON data_kehadiran.nip=data_pegawai.nip INNER JOIN data_jabatan ON data_jabatan.nama_jabatan=data_pegawai.jabatan WHERE data_kehadiran.id_kehadiran='$id'")->result();
+    $data['print_slip'] = $this->db->query("SELECT data_pegawai.nip, data_pegawai.nama_pegawai, data_jabatan.nama_jabatan, 
+    data_jabatan.tunjangan_jabatan, data_jabatan.tunjangan_transport, data_jabatan.upah_mengajar, data_kehadiran.alpha, data_kehadiran.bulan 
+    FROM data_pegawai INNER JOIN data_kehadiran ON data_kehadiran.nip=data_pegawai.nip 
+    INNER JOIN data_jabatan ON data_jabatan.id_jabatan=data_pegawai.jabatan WHERE data_pegawai.nip='$nip'")->result();
 
     // var_dump($data);
     // die;

@@ -16,8 +16,9 @@
 <body>
 
   <center>
-    <h1>Institusi Pemerintah</h1>
-    <h2>Slip Gaji Pegawai</h2>
+    <h4>TANDA TERIMA BISYAROH GURU </h4>			
+    <h4>MTs NURUL MUBTADIIN </h4>				
+    <h4>JATISARI PURWODADI PASURUAN </h4>
     <hr style="width: 50%; border-width: 5px; color: black;">
   </center>
 
@@ -25,13 +26,15 @@
 
   ?>
 
-  <?php foreach ($potongan as $p) {
-    $potongan = $p->jml_potongan;
-  } ?>
+  <?php foreach ($jam as $p)
+    $jam = $p->total_jam;
+  ?>
+
+  <?php foreach ($kehadiran as $t)
+    $total_hadir = $t->hadir;
+  ?>
 
   <?php foreach ($print_slip as $ps) : ?>
-
-    <?php $potongan_gaji = $ps->alpha * $potongan; ?>
 
     <table style="width: 100%;">
       <tr>
@@ -69,25 +72,20 @@
       </tr>
       <tr>
         <td>1.</td>
-        <td>Gaji Pokok</td>
-        <td>Rp. <?= number_format($ps->gaji_pokok, 0, ',', '.'); ?>,-</td>
+        <td>Tunjangan Jabatan</td>
+        <td>Rp. <?= number_format($ps->tunjangan_jabatan, 0, ',', '.'); ?>,-</td>
       </tr>
       <tr>
         <td>2.</td>
         <td>Tunjangan Transportasi</td>
-        <td>Rp. <?= number_format($ps->tj_transport, 0, ',', '.'); ?>,-</td>
+        <td>Rp. <?= number_format($ps->tunjangan_transport, 0, ',', '.'); ?>,-</td>
       </tr>
       <tr>
         <td>3.</td>
-        <td>Uang Makan</td>
-        <td>Rp. <?= number_format($ps->uang_makan, 0, ',', '.'); ?>,-</td>
+        <td>Upah Mengajar</td>
+        <td>Rp. <?= number_format($ps->upah_mengajar, 0, ',', '.'); ?>,-</td>
       </tr>
-      <tr>
-        <td>4.</td>
-        <td>Potongan</td>
-        <td>Rp. <?= number_format($potongan_gaji, 0, ',', '.'); ?>,-</td>
-      </tr>
-      <?php $total_gaji = $ps->gaji_pokok + $ps->tj_transport + $ps->uang_makan - $potongan_gaji; ?>
+      <?php $total_gaji = $ps->tunjangan_jabatan + $ps->tunjangan_transport * $total_hadir + $ps->upah_mengajar * $jam; ?>
       <tr>
         <th colspan="2" style="text-align: right;">Total Gaji</th>
         <th>Rp. <?= number_format($total_gaji, 0, ',', '.'); ?>,-</th>

@@ -106,7 +106,7 @@
               </option>
               <option value="1">Admin</option>
               <option value="2">Pegawai</option>
-              <option value="3">Tidak Ada</option>
+              <option value="3">Kepala Sekolah</option>
             </select>
           </div>
           <button type="submit" class="btn btn-primary">Simpan</button>

@@ -36,6 +36,12 @@ class Welcome extends CI_Controller
 					case 2:
 						redirect('pegawai/dashboard');
 						break;
+					case 3:
+						redirect('kepsek/dashboard');
+						break;
+					case 4:
+						redirect('bendahara/dashboard');
+						break;
 					default:
 						break;
 				}

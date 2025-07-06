@@ -30,6 +30,7 @@
               <div class="col-lg-12">
                 <div class="p-5">
                   <div class="text-center">
+                                        <img src="<?= base_url('assets/img/mts.png'); ?>" alt="Logo MTS Nurul Mubtadiin" style="width: 100px; height: auto; margin-bottom: 15px;">
                     <h1 class="h4 text-gray-900 mb-4">Website Penggajian <br> <b>MTS Nurul Mubtadiin</b></h1>
                   </div>
                   <?= $this->session->flashdata('pesan'); ?>

@@ -41,6 +41,8 @@
           <td>Admin</td>
         <?php } elseif ($p->hak_akses == 2) { ?>
           <td>Pegawai</td>
+        <?php } elseif ($p->hak_akses == 3) { ?>
+          <td>Kepala Sekolah</td>
         <?php } else { ?>
           <td>Tidak Ada</td>
         <?php } ?>

@@ -116,7 +116,7 @@
             <option value="">--Pilih Hak Akses--</option>
             <option value="1">Admin</option>
             <option value="2">Pegawai</option>
-            <option value="3">Tidak Ada</option>
+            <option value="3">Kepala Sekolah</option>
           </select>
         </div>
 

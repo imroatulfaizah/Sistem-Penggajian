@@ -47,8 +47,14 @@ class LaporanGaji extends CI_Controller
       $tahun = date('Y');
       $bulanTahun = $bulan . $tahun;
     }
-    $data['potongan'] = $this->penggajianModel->get_data('potongan_gaji')->result();
-    $data['cetakGaji'] = $this->db->query("SELECT data_pegawai.nip, data_pegawai.nama_pegawai, data_pegawai.jenis_kelamin, data_jabatan.nama_jabatan, data_jabatan.gaji_pokok, data_jabatan.tj_transport, data_jabatan.uang_makan, data_kehadiran.alpha FROM data_pegawai INNER JOIN data_kehadiran ON data_kehadiran.nip=data_pegawai.nip INNER JOIN data_jabatan ON data_jabatan.nama_jabatan=data_pegawai.jabatan WHERE data_kehadiran.bulan='$bulanTahun' ORDER BY data_pegawai.nama_pegawai ASC")->result();
+    $data['kehadiran'] = $this->db->query("SELECT hadir FROM data_kehadiran")->result();
+    $data['jam'] = $this->db->query("SELECT SUM(total_jam) as total_jam FROM data_penempatan")->result();
+    $data['cetakGaji'] = $this->db->query("SELECT data_pegawai.nip, data_pegawai.nama_pegawai, data_pegawai.jenis_kelamin, 
+    data_jabatan.nama_jabatan, data_jabatan.tunjangan_jabatan, data_jabatan.tunjangan_transport, data_jabatan.upah_mengajar, 
+    data_kehadiran.hadir 
+    FROM data_pegawai INNER JOIN data_kehadiran ON data_kehadiran.nip=data_pegawai.nip 
+    INNER JOIN data_jabatan ON data_jabatan.nama_jabatan=data_pegawai.jabatan 
+    WHERE data_kehadiran.bulan='$bulanTahun' ORDER BY data_pegawai.nama_pegawai ASC")->result();
     $this->load->view('templates_admin/header', $data);
     $this->load->view('admin/LaporGaji/cetakDataGaji', $data);
   }

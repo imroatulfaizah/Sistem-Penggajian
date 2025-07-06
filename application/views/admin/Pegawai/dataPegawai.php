@@ -34,7 +34,7 @@
         <td><?= $p->nip; ?></td>
         <td><?= $p->nama_pegawai; ?></td>
         <td><?= $p->jenis_kelamin; ?></td>
-        <td><?= $p->jabatan; ?></td>
+        <td><?= $p->nama_jabatan; ?></td>
         <td><img src="<?= base_url('assets/photo/') . $p->photo; ?>" alt="" width="70px"></td>
         <td><?= $p->status; ?></td>
         <?php if ($p->hak_akses == 1) { ?>

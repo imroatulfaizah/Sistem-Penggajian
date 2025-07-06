@@ -16,7 +16,7 @@
       <th class="text-center">ID Pegawai</th>
       <th class="text-center">Nama Insentif</th>
       <th class="text-center">Nominal Tunjangan</th>
-      <th class="text-center">Is Paid</th>
+      <th class="text-center">Status Pembayaran</th>
       <th class="text-center">Action</th>
     </tr>
 
@@ -28,7 +28,13 @@
         <td><?= $j->id_pegawai; ?></td>
         <td><?= $j->nama_insentif; ?></td>
         <td>Rp. <?= number_format($j->nominal, 0, ',', '.'); ?>,-</td>
-        <td><?= $j->is_paid; ?></td>
+        <td>
+            <?php if ($j->is_paid == 1): ?>
+                <span style="color: green;">Sudah dibayar</span>
+            <?php else: ?>
+                <span style="color: red;">Belum dibayar</span>
+            <?php endif; ?>
+        </td>
         <!-- <td>Rp. <= number_format($j->nominal, 0, ',', '.'); ?>,-</td>
         <td>Rp. <= number_format($j->tj_transport, 0, ',', '.'); ?>,-</td>
         ?php $total = $j->gaji_pokok + $j->tj_transport + $j->uang_makan; ?>

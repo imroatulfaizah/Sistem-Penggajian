@@ -2,7 +2,7 @@
       <footer class="sticky-footer bg-white fixed-bottom">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
-            <span><?php echo "Copyright 2021 - " . date("Y") ?></span>
+            <span><?php echo "Copyright 2025 - " . date("Y") ?></span>
           </div>
         </div>
       </footer>

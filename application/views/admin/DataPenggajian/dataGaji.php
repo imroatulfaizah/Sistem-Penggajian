@@ -97,22 +97,19 @@
           <th class="text-center">Nama Pegawai</th>
           <th class="text-center">Jenis Kelamin</th>
           <th class="text-center">Jabatan</th>
-          <th class="text-center">Gaji Pokok</th>
-          <th class="text-center">Tj. Transport</th>
-          <th class="text-center">Uang Makan</th>
-          <th class="text-center">Potongan</th>
+          <th class="text-center">Tunjangan Jabatan</th>
+          <th class="text-center">Tunjangan Transport</th>
+          <th class="text-center">Upah Mengajar</th>
           <th class="text-center">Total Gaji</th>
         </tr>
 
-        <?php foreach ($potongan as $p) {
-          $alpha = $p->jml_potongan;
+        <?php foreach ($jam as $p) {
+          $jam = $p->total_jam;
         } ?>
         <?php
         $no = 1;
         foreach ($gaji as $g) : ?>
-          <?php   #untuk potongan gaji 
-          ?>
-          <?php $potongan = $g->alpha * $alpha; ?>
+          <?php $total_hadir = $g->hadir; ?>
           <tr>
             <td><?= $no++; ?></td>
             <td><?= $g->nip; ?></td>
@@ -120,12 +117,11 @@
             <td><?= $g->jenis_kelamin; ?></td>
             <td><?= $g->nama_jabatan; ?></td>
             <td>Rp. <?= number_format($g->tunjangan_jabatan, 0, ',', '.'); ?>,-</td>
-            <td>Rp. <?= number_format($g->tunjangan_transport, 0, ',', '.'); ?>,-</td>
-            <td>Rp. <?= number_format($g->upah_mengajar, 0, ',', '.'); ?>,-</td>
-            <td>Rp. <?= number_format($potongan, 0, ',', '.'); ?>,-</td>
+            <td>Rp. <?= number_format($g->tunjangan_transport, 0, ',', '.'); ?> x <?= $total_hadir ?></td>
+            <td>Rp. <?= number_format($g->upah_mengajar, 0, ',', '.'); ?> x <?= $jam ?></td>
             <?php    #jumlahkan seluruh gaji 
             ?>
-            <?php $total_gaji = $g->tunjangan_jabatan + $g->tunjangan_transport + $g->upah_mengajar; ?>
+            <?php $total_gaji = $g->tunjangan_jabatan + $g->tunjangan_transport * $total_hadir + $g->upah_mengajar * $jam; ?>
             <td>Rp. <?= number_format($total_gaji, 0, ',', '.'); ?>,-</td>
           </tr>
 

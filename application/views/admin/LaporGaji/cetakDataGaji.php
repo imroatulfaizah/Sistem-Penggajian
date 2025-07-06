@@ -53,31 +53,29 @@
       <th class="text-center">Nama Pegawai</th>
       <th class="text-center">Jenis Kelamin</th>
       <th class="text-center">Jabatan</th>
-      <th class="text-center">Gaji Pokok</th>
-      <th class="text-center">Tj. Transport</th>
-      <th class="text-center">Uang Makan</th>
-      <th class="text-center">Potongan</th>
+      <th class="text-center">Tunjangan Jabatan</th>
+      <th class="text-center">Tunjangan Transport</th>
+      <th class="text-center">Upah Mengajar</th>
       <th class="text-center">Total Gaji</th>
     </tr>
 
-    <?php foreach ($potongan as $p) {
-      $alpha = $p->jml_potongan;
+    <?php foreach ($jam as $p) {
+      $jam = $p->total_jam;
     } ?>
     <?php
     $no = 1;
     foreach ($cetakGaji as $g) : ?>
       <?php $potongan = $g->alpha * $alpha; ?>
-      <tr>
+      <tr>s
         <td><?= $no++; ?></td>
         <td><?= $g->nip; ?></td>
         <td><?= $g->nama_pegawai; ?></td>
         <td><?= $g->jenis_kelamin; ?></td>
         <td><?= $g->nama_jabatan; ?></td>
-        <td>Rp. <?= number_format($g->gaji_pokok, 0, ',', '.'); ?>,-</td>
-        <td>Rp. <?= number_format($g->tj_transport, 0, ',', '.'); ?>,-</td>
-        <td>Rp. <?= number_format($g->uang_makan, 0, ',', '.'); ?>,-</td>
-        <td>Rp. <?= number_format($potongan, 0, ',', '.'); ?>,-</td>
-        <?php $total_gaji = $g->gaji_pokok + $g->tj_transport + $g->uang_makan - $potongan; ?>
+        <td>Rp. <?= number_format($g->tunjangan_jabatan, 0, ',', '.'); ?>,-</td>
+        <td>Rp. <?= number_format($g->tunjangan_transport, 0, ',', '.'); ?>,-</td>
+        <td>Rp. <?= number_format($g->upah_mengajar, 0, ',', '.'); ?>,-</td>
+        <?php $total_gaji = $g->tunjangan_jabatan + $g->tunjangan_transport + $g->upah_mengajar * $jam; ?>
         <td>Rp. <?= number_format($total_gaji, 0, ',', '.'); ?>,-</td>
       </tr>
 
@@ -88,9 +86,10 @@
     <tr>
       <td></td>
       <td width="200px">
-        <p>Semarang, <?= date("d M Y"); ?> <br> Finance</p>
+        <p>Pasuruan, <?= date("d M Y"); ?> <br> Bendahara</p>
         <br><br>
         <p>__________________</p>
+        <p>NISWATUN H.</p>
       </td>
     </tr>
   </table>

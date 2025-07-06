@@ -26,7 +26,7 @@
           <?= form_error('nominal', '<div class="text-small text-danger">', '</div>') ?>
         </div>
         <div class="form-group">
-          <label for="">Is Paid</label>
+          <label for="">Status Pembayaran</label>
           <input type="text" name="is_paid" class="form-control">
           <?= form_error('is_paid', '<div class="text-small text-danger">', '</div>') ?>
         </div>

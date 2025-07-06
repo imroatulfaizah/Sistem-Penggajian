@@ -78,12 +78,12 @@
       <tr>
         <td>2.</td>
         <td>Tunjangan Transportasi</td>
-        <td>Rp. <?= number_format($ps->tunjangan_transport, 0, ',', '.'); ?>,-</td>
+        <td>Rp. <?= number_format($ps->tunjangan_transport, 0, ',', '.'); ?> x <?= $total_hadir ?></td>
       </tr>
       <tr>
         <td>3.</td>
         <td>Upah Mengajar</td>
-        <td>Rp. <?= number_format($ps->upah_mengajar, 0, ',', '.'); ?>,-</td>
+        <td>Rp. <?= number_format($ps->upah_mengajar, 0, ',', '.'); ?> x <?= $jam ?></td>
       </tr>
       <?php $total_gaji = $ps->tunjangan_jabatan + $ps->tunjangan_transport * $total_hadir + $ps->upah_mengajar * $jam; ?>
       <tr>
@@ -95,14 +95,16 @@
     <table width="100%">
       <tr>
         <td>
-          <p>Pegawai</p>
-          <br><br>
-          <p class="font-weight-bold"><?= $ps->nama_pegawai; ?></p>
-        </td>
-        <td width="200px;">
-          <p>Semarang, <?= date('d M Y'); ?> <br> Finance,</p>
+          <p>Kepala Sekolah</p>
           <br><br>
           <p>____________________</p>
+          <p class="font-weight-bold"> MAHFUDZ, S,Ag.</p>
+        </td>
+        <td width="200px;">
+          <p>Pasuruan, <?= date('d M Y'); ?> <br> Bendahara,</p>
+          <br><br>
+          <p>____________________</p>
+          <p>NISWATUN H. </p>
         </td>
       </tr>
     </table>

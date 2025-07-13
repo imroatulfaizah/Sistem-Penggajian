@@ -36,7 +36,7 @@ class DataPenggajian extends CI_Controller
     #data pegawai , data jabatan , dan  data kehadiran dengan sql INNER JOIN
     #sql dengan kondisi meneyesuaikan bulan dan tahun WHERE data_kehadiran.bulan='$bulanTahun' ORDER BY data_pegawai.nama_pegawai ASC")->result();
     $data['gaji'] = $this->db->query("SELECT data_pegawai.nip, data_pegawai.nama_pegawai, data_pegawai.jenis_kelamin, 
-    data_jabatan.nama_jabatan, data_jabatan.tunjangan_jabatan, data_jabatan.tunjangan_transport, data_jabatan.upah_mengajar, data_kehadiran.alpha 
+    data_jabatan.nama_jabatan, data_jabatan.tunjangan_jabatan, data_jabatan.tunjangan_transport, data_jabatan.upah_mengajar, data_kehadiran.hadir 
     FROM data_pegawai INNER JOIN data_kehadiran ON data_kehadiran.nip=data_pegawai.nip 
     INNER JOIN data_jabatan ON data_jabatan.id_jabatan=data_pegawai.jabatan 
     WHERE data_kehadiran.bulan='$bulanTahun' ORDER BY data_pegawai.nama_pegawai ASC")->result();

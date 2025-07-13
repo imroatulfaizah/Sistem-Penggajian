@@ -23,6 +23,12 @@
       </li>
 
       <li class="nav-item">
+        <a class="nav-link" href="<?= base_url('pegawai/dataAbsensi'); ?>">
+          <i class="fas fa-fw fa-money-check-alt"></i>
+          <span>Absen</span></a>
+      </li>
+
+      <li class="nav-item">
         <a class="nav-link" href="<?= base_url('pegawai/dataGaji'); ?>">
           <i class="fas fa-fw fa-money-check-alt"></i>
           <span>Data Gaji</span></a>

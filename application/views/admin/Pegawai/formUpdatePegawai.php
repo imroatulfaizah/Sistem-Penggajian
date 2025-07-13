@@ -107,6 +107,7 @@
               <option value="1">Admin</option>
               <option value="2">Pegawai</option>
               <option value="3">Kepala Sekolah</option>
+              <option value="4">Bendaraha</option>
             </select>
           </div>
           <button type="submit" class="btn btn-primary">Simpan</button>

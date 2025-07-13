@@ -47,7 +47,7 @@
         </div>
       </li>
       <li class="nav-item active">
-        <a class="nav-link" href="<?= base_url('GantiPassword'); ?>">
+        <a class="nav-link" href="<?= base_url('kepsek/GantiPassword'); ?>">
           <i class="fas fa-fw fa-lock"></i>
           <span>Ganti Password</span></a>
       </li>

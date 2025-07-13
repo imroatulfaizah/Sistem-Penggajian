@@ -39,6 +39,86 @@ class DataAbsensi extends CI_Controller
     $this->load->view('templates_admin/footer');
   }
 
+  // Guru scan QR → buka halaman form absensi
+  public function attend($nip) 
+  {
+      $pegawai = $this->db->get_where('data_pegawai', ['nip' => $nip])->row();
+      if (!$pegawai) {
+          echo "Data pegawai tidak ditemukan!";
+          return;
+      }
+      $data['pegawai'] = $pegawai;
+      $this->load->view('admin/RekapAbsen/formScanAbsensi', $data); // view baru, kita bikin di bawah
+  }
+
+  // Guru klik "Attend" → validasi GPS → simpan
+  public function do_attend() 
+  {
+      $nip = $this->input->post('nip');
+      $lat = $this->input->post('lat');
+      $lon = $this->input->post('lon');
+
+      // Lokasi sekolah (contoh)
+      $lat_school = -6.200000;
+      $lon_school = 106.816666;
+      $radius = 100; // meter
+
+      // Hitung jarak
+      $theta = $lon - $lon_school;
+      $dist = sin(deg2rad($lat)) * sin(deg2rad($lat_school)) +
+              cos(deg2rad($lat)) * cos(deg2rad($lat_school)) * cos(deg2rad($theta));
+      $dist = acos($dist);
+      $dist = rad2deg($dist);
+      $km = $dist * 60 * 1.1515 * 1.609344;
+      $meters = $km * 1000;
+
+      if ($meters > $radius) {
+          echo "❌ Gagal: Anda di luar area sekolah.";
+          return;
+      }
+
+      $bulan = date('mY'); // contoh bulan + tahun jadi misalnya 072025
+      $cek = $this->db->get_where('data_kehadiran', ['nip' => $nip, 'bulan' => $bulan])->row();
+
+      if ($cek) {
+          // Sudah ada record bulan ini, tambahkan hadir +1
+          $this->db->set('hadir', 'hadir+1', FALSE);
+          $this->db->where('id_kehadiran', $cek->id_kehadiran);
+          $this->db->update('data_kehadiran');
+      } else {
+          // Belum ada record bulan ini, insert baru
+          $pegawai = $this->db->get_where('data_pegawai', ['nip' => $nip])->row();
+          $data = [
+              'bulan'         => $bulan,
+              'nip'           => $nip,
+              'nama_pegawai'  => $pegawai->nama_pegawai,
+              'jenis_kelamin' => $pegawai->jenis_kelamin,
+              'nama_jabatan'  => $pegawai->jabatan,
+              'hadir'         => 1,
+              'sakit'         => 0,
+              'izin'          => 0,
+              'alpha'         => 0
+          ];
+          $this->db->insert('data_kehadiran', $data);
+      }
+
+      echo "✅ Berhasil absen!";
+  }
+
+  // Generate QR unik per guru
+  public function generate_qr($nip) {
+      $filename = 'qr/' . $nip . '.png';
+      if (!file_exists(FCPATH . $filename)) {
+          $this->load->library('ciqrcode');
+          $params['data'] = base_url('admin/dataAbsensi/attend/' . $nip); // url scan
+          $params['level'] = 'H';
+          $params['size'] = 10;
+          $params['savename'] = FCPATH . $filename;
+          $this->ciqrcode->generate($params);
+      }
+      echo "QR generated: <br><img src='" . base_url($filename) . "' width='200' />";
+  }
+
   public function inputAbsensi()
   {
     if ($this->input->post('submit', TRUE) == 'submit') {

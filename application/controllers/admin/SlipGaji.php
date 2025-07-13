@@ -39,8 +39,10 @@ class SlipGaji extends CI_Controller
   public function cetakSlipGaji()
   {
     $data['title'] = "Cetak Slip Gaji";
-    $id_pegawai = $this->input->post('id_pegawai');
+    $nip = $this->input->post('nip');
     //$data['jam'] = $this->db->query("SELECT * FROM data_penempatan WHERE id_guru = '$id_pegawai'")->result();
+    $data['insentif'] = $this->db->query("SELECT SUM(nominal) AS jumlah_insentif FROM data_insentif WHERE nip = '$nip'")->result();
+    $data['kehadiran'] = $this->db->query("SELECT hadir FROM data_kehadiran WHERE nip = '$nip'")->result();
     $data['jam'] = $this->penggajianModel->get_data('data_penempatan')->result();
 
     $nama = $this->input->post('nama_pegawai');
@@ -49,12 +51,12 @@ class SlipGaji extends CI_Controller
     $bulanTahun = $bulan . $tahun;
     $data['print_slip'] = $this->db->query("SELECT data_pegawai.nip, data_pegawai.nama_pegawai, 
     data_jabatan.nama_jabatan, data_jabatan.tunjangan_jabatan, data_jabatan.tunjangan_transport, 
-    data_jabatan.upah_mengajar, data_kehadiran.alpha, data_kehadiran.bulan FROM data_pegawai 
+    data_jabatan.upah_mengajar, data_kehadiran.hadir, data_kehadiran.bulan FROM data_pegawai 
     INNER JOIN data_kehadiran ON data_kehadiran.nip=data_pegawai.nip 
     INNER JOIN data_jabatan ON data_jabatan.id_jabatan=data_pegawai.jabatan 
     WHERE data_kehadiran.bulan='$bulanTahun' AND data_kehadiran.nama_pegawai='$nama'")->result();
 
-    // var_dump($slip);
+    // var_dump($data['print_slip']);
     // die;
 
     $this->load->view('templates_admin/header', $data);

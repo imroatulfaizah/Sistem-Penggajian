@@ -25,9 +25,18 @@
     $jam = $p->total_jam;
   } ?>
 
+  <!-- < foreach ($kehadiran as $t)
+    $total_hadir = $t->hadir;
+  ?> -->
+
+  <?php foreach ($insentif as $a)
+      $total_insentif = $a->jumlah_insentif;
+    ?>
+
+
   <?php foreach ($print_slip as $ps) : ?>
 
-    <?php $total_gaji_mengajar = $ps->hadir * $jam; ?>
+    <?php $total_hadir = $ps->hadir; ?>
 
     <table style="width: 100%;">
       <tr>
@@ -75,15 +84,20 @@
       </tr>
       <tr>
         <td>3.</td>
-        <td>Uang Makan</td>
-        <td>Rp. <?= number_format($ps->uang_makan, 0, ',', '.'); ?>,-</td>
+        <td>Tunjangan Transportasi</td>
+        <td>Rp. <?= number_format($ps->tunjangan_transport, 0, ',', '.'); ?> x <?= $total_hadir ?></td>
+      </tr>
+      <tr>
+        <td>4.</td>
+        <td>Upah Mengajar</td>
+        <td>Rp. <?= number_format($ps->upah_mengajar, 0, ',', '.'); ?> x <?= $jam ?></td>
       </tr>
       <tr>
         <td>4.</td>
         <td>Insentif</td>
-        <!-- <td>Rp. <= number_format($potongan_gaji, 0, ',', '.'); ?>,-</td> -->
+        <td>Rp. <?= number_format($total_insentif, 0, ',', '.'); ?>,-</td>
       </tr>
-      <?php $total_gaji = $ps->$total_gaji_mengajar + $ps->tunjangan_transport + $ps->uang_makan - $potongan_gaji; ?>
+       <?php $total_gaji = $ps->tunjangan_jabatan + $ps->tunjangan_transport * $total_hadir + $ps->upah_mengajar * $jam + $total_insentif; ?>
       <tr>
         <th colspan="2" style="text-align: right;">Total Gaji</th>
         <th>Rp. <?= number_format($total_gaji, 0, ',', '.'); ?>,-</th>
@@ -98,7 +112,7 @@
           <p class="font-weight-bold"><?= $ps->nama_pegawai; ?></p>
         </td>
         <td width="200px;">
-          <p>Semarang, <?= date('d M Y'); ?> <br> Finance,</p>
+          <p>Pasuruan, <?= date('d M Y'); ?> <br> Bendahara,</p>
           <br><br>
           <p>____________________</p>
         </td>

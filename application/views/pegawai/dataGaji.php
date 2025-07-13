@@ -10,6 +10,7 @@
     <tr>
       <th>Bulan / Tahun</th>
       <th>Tunjangan Jabatan</th>
+      <th>Insentif</th>
       <th>Tunjangan Transportasi</th>
       <th>Upah Mengajar</th>
       <th>Total Gaji</th>
@@ -24,13 +25,18 @@
       $total_hadir = $t->hadir;
     ?>
 
+    <?php foreach ($insentif as $a)
+      $total_insentif = $a->jumlah_insentif;
+    ?>
+
     <?php foreach ($gaji as $g) : ?>
       <tr>
         <td><?= $g->bulan; ?></td>
         <td>Rp. <?= number_format($g->tunjangan_jabatan, 0, ',', '.'); ?>,-</td>
+        <td>Rp. <?= number_format($total_insentif, 0, ',', '.'); ?>,-</td>
         <td>Rp. <?= number_format($g->tunjangan_transport, 0, ',', '.'); ?> x <?= $total_hadir ?></td>
         <td>Rp. <?= number_format($g->upah_mengajar , 0, ',', '.'); ?> x <?= $jam ?></td>
-        <?php $total_gaji = $g->tunjangan_jabatan + $g->tunjangan_transport * $total_hadir + $g->upah_mengajar * $jam; ?>
+        <?php $total_gaji = $g->tunjangan_jabatan + $g->tunjangan_transport * $total_hadir + $g->upah_mengajar * $jam + $total_insentif; ?>
         <td>Rp. <?= number_format($total_gaji, 0, ',', '.'); ?>,-</td>
         <td>
           <center>

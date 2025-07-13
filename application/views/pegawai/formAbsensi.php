@@ -35,7 +35,8 @@
         <input type="hidden" name="lat" id="lat">
         <input type="hidden" name="lon" id="lon">
 
-        <button type="submit" class="btn btn-success mt-3">✅ Attend</button>
+        <button type="submit" class="btn btn-primary mt-3">✅ Clock In</button>
+        <button type="submit" class="btn btn-success mt-3">✅ Clock Out</button>
       </form>
     </div>
   </div>

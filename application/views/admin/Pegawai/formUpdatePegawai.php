@@ -57,9 +57,8 @@
             <label for="">Status</label>
             <select name="status" id="" class="form-control">
               <option value="<?= $p->status; ?>"><?= $p->status; ?></option>
-              <option value="Pegawai Tetap">Pegawai Tetap</option>
-              <option value="Pegawai Tidak Tetap">Pegawai Tidak Tetap</option>
-              <option value="Magang">Magang</option>
+              <option value="SATMINKAL">SATMINKAL</option>
+              <option value="NON SATMINKAL">NON SATMINKAL</option>
             </select>
             <?= form_error('status', '<div class="text-small text-danger">', '</div>') ?>
           </div>
@@ -107,7 +106,7 @@
               <option value="1">Admin</option>
               <option value="2">Pegawai</option>
               <option value="3">Kepala Sekolah</option>
-              <option value="4">Bendaraha</option>
+              <option value="4">Bendahara</option>
             </select>
           </div>
           <button type="submit" class="btn btn-primary">Simpan</button>

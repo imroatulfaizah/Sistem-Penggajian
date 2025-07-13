@@ -23,6 +23,7 @@ class DataGaji extends CI_Controller
     $nip = $this->session->userdata('nip');
     // var_dump($nik);
     // die;
+    $data['insentif'] = $this->db->query("SELECT SUM(nominal) AS jumlah_insentif FROM data_insentif WHERE nip = '$nip'")->result();
     $data['kehadiran'] = $this->db->query("SELECT hadir FROM data_kehadiran WHERE nip = '$nip'")->result();
     $data['jam'] = $this->db->query("SELECT SUM(total_jam) as total_jam FROM data_penempatan WHERE nip = '$nip'")->result();
     $data['gaji'] = $this->db->query("SELECT data_pegawai.nama_pegawai, data_pegawai.nip, data_jabatan.tunjangan_jabatan, 
@@ -41,6 +42,7 @@ class DataGaji extends CI_Controller
   public function cetakSlip($nip)
   {
     $data['title'] = "Cetak Slip Gaji";
+    $data['insentif'] = $this->db->query("SELECT SUM(nominal) AS jumlah_insentif FROM data_insentif WHERE nip = '$nip'")->result();
     $data['kehadiran'] = $this->db->query("SELECT hadir FROM data_kehadiran WHERE nip = '$nip'")->result();
     $data['jam'] = $this->db->query("SELECT SUM(total_jam) as total_jam FROM data_penempatan WHERE nip = '$nip'")->result();
 

@@ -11,9 +11,9 @@
       <form action="<?= base_url('admin/dataInsentif/tambahDataAksi') ?>" method="post">
 
         <div class="form-group">
-          <label for="">ID Pegawai</label>
-          <input type="text" name="id_pegawai" class="form-control">
-          <?= form_error('id_pegawai', '<div class="text-small text-danger">', '</div>') ?>
+          <label for="">NIP</label>
+          <input type="text" name="nip" class="form-control">
+          <?= form_error('nip', '<div class="text-small text-danger">', '</div>') ?>
         </div>
         <div class="form-group">
           <label for="">Nama Insentif</label>

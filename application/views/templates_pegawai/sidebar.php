@@ -8,7 +8,7 @@
 
       <!-- Sidebar - Brand -->
       <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-        <div class="sidebar-brand-text mx-3">APk PENGGAJIAN</div>
+        <div class="sidebar-brand-text mx-3">APK PENGGAJIAN</div>
 
       </a>
 
@@ -25,13 +25,25 @@
       <li class="nav-item">
         <a class="nav-link" href="<?= base_url('pegawai/dataAbsensi'); ?>">
           <i class="fas fa-fw fa-money-check-alt"></i>
-          <span>Absen</span></a>
+          <span>Absensi Kehadiran</span></a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="<?= base_url('pegawai/dataPenempatan'); ?>">
+          <i class="fas fa-fw fa-money-check-alt"></i>
+          <span>Jadwal Mengajar</span></a>
       </li>
 
       <li class="nav-item">
         <a class="nav-link" href="<?= base_url('pegawai/dataGaji'); ?>">
           <i class="fas fa-fw fa-money-check-alt"></i>
           <span>Data Gaji</span></a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="<?= base_url('pegawai/dataAbsensi/generate_qr'); ?>">
+          <i class="fas fa-fw fa-money-check-alt"></i>
+          <span>Generate QR Code</span></a>
       </li>
 
       <li class="nav-item">

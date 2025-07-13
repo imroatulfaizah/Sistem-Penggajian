@@ -65,9 +65,8 @@
           <label for="">Status</label>
           <select name="status" id="" class="form-control">
             <option value="">--Pilih Status--</option>
-            <option value="Pegawai Tetap">Pegawai Tetap</option>
-            <option value="Pegawai Tidak Tetap">Pegawai Tidak Tetap</option>
-            <option value="Magang">Magang</option>
+            <option value="SATMINKAL">SATMINKAL</option>
+            <option value="NON SATMINKAL">NON SATMINKAL</option>
           </select>
           <?= form_error('status', '<div class="text-small text-danger">', '</div>') ?>
         </div>

@@ -13,10 +13,10 @@
       <form action="<?= base_url('admin/datainsentif/updateDataAksi') ?>" method="post">
 
         <div class="form-group">
-          <label for="">ID Pegawai</label>
+          <label for="">NIP</label>
           <input type="hidden" name="id_insentif" value="<?= $j->id_insentif; ?>">
-          <input type="text" name="id_pegawai" class="form-control" value="<?= $j->id_pegawai; ?>">
-          <?= form_error('id_pegawai', '<div class="text-small text-danger">', '</div>') ?>
+          <input type="text" name="nip" class="form-control" value="<?= $j->nip; ?>">
+          <?= form_error('nip', '<div class="text-small text-danger">', '</div>') ?>
         </div>
         <div class="form-group">
           <label for="">Nama Insentif</label>

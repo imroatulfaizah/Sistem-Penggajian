@@ -10,7 +10,7 @@
     <div class="card-body">
 
       <?php foreach($jabatan as $j): ?>
-      <form action="<?= base_url('admin/dataJabatan/updateDataAksi') ?>" method="post">
+      <form action="<?= base_url('admin/dataPenempatan/updateDataAksi') ?>" method="post">
 
         <div class="form-group">
           <label for="">Nama Jabatan</label>

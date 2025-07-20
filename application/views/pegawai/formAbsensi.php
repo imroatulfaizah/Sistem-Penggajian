@@ -3,9 +3,11 @@
 
   <!-- Page Heading -->
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Absensi Scan QR</h1>
+    <h1 class="h3 mb-0 text-gray-800">Absensi Scan QR (HTML5 QRCode)</h1>
   </div>
-    <?= $this->session->flashdata('pesan'); ?>
+
+  <?= $this->session->flashdata('pesan'); ?>
+
   <div class="card" style="width: 60%; margin-bottom:100px;">
     <div class="card-body">
 
@@ -34,22 +36,63 @@
 
         <input type="hidden" name="lat" id="lat">
         <input type="hidden" name="lon" id="lon">
+        <input type="hidden" class="form-control" name="qr_data" id="qr_data" readonly>
+        <!-- <input type="hidden" name="qr_data" id="qr_data"> -->
 
-        <button type="submit" class="btn btn-primary mt-3">✅ Clock In</button>
-        <button type="submit" class="btn btn-success mt-3">✅ Clock Out</button>
+        <!-- Area kamera HTML5 QR Code -->
+        <div id="reader" style="width: 100%; max-width: 400px; margin: 20px 0;"></div>
+
+        <button type="button" class="btn btn-primary mt-3" onclick="startScan()">✅ Scan & Clock In</button>
       </form>
     </div>
   </div>
 </div>
 
-<!-- Script untuk deteksi lokasi -->
+<!-- Load html5-qrcode dari CDN -->
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
 <script>
-navigator.geolocation.getCurrentPosition(function(position) {
+// Ambil lokasi saat halaman dibuka
+navigator.geolocation.getCurrentPosition(function (position) {
   document.getElementById('lat').value = position.coords.latitude;
   document.getElementById('lon').value = position.coords.longitude;
   document.getElementById('location').value = position.coords.latitude + ", " + position.coords.longitude;
-}, function(error) {
+}, function (error) {
   console.error(error);
   document.getElementById('location').value = "❌ Gagal mendeteksi lokasi!";
 });
+
+// Fungsi memulai QR scan
+function startScan() {
+  const qrReader = new Html5Qrcode("reader");
+
+  qrReader.start(
+    { facingMode: "environment" }, // Bisa ganti jadi user jika ingin kamera depan
+    {
+      fps: 10,
+      qrbox: 250
+    },
+    (decodedText, decodedResult) => {
+      // QR berhasil dibaca
+      console.log(`QR Code detected: ${decodedText}`);
+      document.getElementById('qr_data').value = decodedText;
+
+      // Hentikan kamera
+      qrReader.stop().then(ignore => {
+        // Submit form setelah berhasil
+        document.querySelector('form').submit();
+      }).catch(err => {
+        console.error('Stop failed', err);
+        alert("❌ Gagal menghentikan kamera!");
+      });
+    },
+    (errorMessage) => {
+      // QR belum terdeteksi
+      // console.warn(errorMessage);
+    }
+  ).catch((err) => {
+    console.error("❌ Kamera gagal dibuka:", err);
+    alert("❌ Gagal membuka kamera! Pastikan sudah diizinkan dan tidak sedang digunakan aplikasi lain.");
+  });
+}
 </script>

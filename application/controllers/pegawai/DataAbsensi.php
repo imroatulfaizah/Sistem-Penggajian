@@ -25,6 +25,7 @@ class DataAbsensi extends CI_Controller
           echo "Data pegawai tidak ditemukan!";
           return;
       }
+      $data['title'] = "Absensi";
       $data['pegawai'] = $pegawai;
       $this->load->view('templates_pegawai/header', $data);
       $this->load->view('templates_pegawai/sidebar');
@@ -35,15 +36,30 @@ class DataAbsensi extends CI_Controller
   // Guru klik "Attend" → validasi GPS → simpan
   public function do_attend() 
   {
+      $this->load->helper('qr');
       $nip = $this->session->userdata('nip');
       $lat = $this->input->post('lat');
       $lon = $this->input->post('lon');
+      $scanned_code = $this->input->post('qr_data');
+
+      $now = new DateTime('now', new DateTimeZone('Asia/Jakarta'));
+      $current_code = generate_daily_unique_code($now);
+
+      if ($scanned_code !== $current_code) {
+          $this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <strong>Kode QR tidak valid atau sudah kadaluarsa!</strong>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+              </button>
+          </div>');
+          redirect('pegawai/dataAbsensi');
+      }
 
       // Lokasi sekolah (contoh)
     //   $lat_school = -7.693513;
     //   $lon_school = 112.900412;
       $lat_school = -6.2357504;
-      $lon_school = 106.840064;
+      $lon_school = 106.8269568;
       $radius = 100; // meter
       // var_dump($lon);
       // die();
@@ -119,20 +135,6 @@ class DataAbsensi extends CI_Controller
           redirect('pegawai/dataAbsensi');
       }
 
-  }
-
-  // Generate QR unik per guru
-  public function generate_qr($nip='337409010212345') {
-      $filename = 'qr/' . $nip . '.png';
-      if (!file_exists(FCPATH . $filename)) {
-          $this->load->library('ciqrcode');
-          $params['data'] = base_url('pegawai/dataAbsensi/' . $nip); // url scan
-          $params['level'] = 'H';
-          $params['size'] = 10;
-          $params['savename'] = FCPATH . $filename;
-          $this->ciqrcode->generate($params);
-      }
-      echo "QR generated: <br><img src='" . base_url($filename) . "' width='200' />";
   }
 
   public function clockIn($id_penempatan) 
@@ -243,15 +245,12 @@ class DataAbsensi extends CI_Controller
           redirect('pegawai/dataPenempatan');
       }
 
-      //$bulan = date('mY'); // contoh bulan + tahun jadi misalnya 072025
       $where = array(
         'id_penempatan' => $id
       );
 
-      // Ambil data absensi lama
       $absensi = $this->db->get_where('absensi_mengajar', ['id_penempatan' => $id_penempatan])->row();
 
-      // Pastikan data absensi ditemukan
       if ($absensi) {
           $data = [
               'id_penempatan'   => $id_penempatan,

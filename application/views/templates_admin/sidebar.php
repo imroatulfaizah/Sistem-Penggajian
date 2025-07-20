@@ -29,8 +29,14 @@
             <a class="collapse-item" href="<?= base_url('admin/dataJabatan'); ?>">Data Jabatan</a>
             <a class="collapse-item" href="<?= base_url('admin/dataKelas'); ?>">Data Kelas</a>
             <a class="collapse-item" href="<?= base_url('admin/dataPelajaran'); ?>">Data Pelajaran</a>
+            <a class="collapse-item" href="<?= base_url('admin/dataPenempatan'); ?>">Data Penempatan</a>
           </div>
         </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="<?= base_url('admin/dataAbsensi/generate_qr'); ?>">
+          <i class="fas fa-fw fa-money-check-alt"></i>
+          <span>Generate QR Code</span></a>
       </li>
       <!-- Nav Item - Utilities Collapse Menu -->
       <li class="nav-item active">

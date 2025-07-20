@@ -26,7 +26,7 @@
 
     <?php
     $no = 1;
-    foreach ($penempatan as $j) : ?>
+    foreach ($penempatan as $g) : ?>
       <tr>
         <td><?= $no++; ?></td>
         <td><?= $g->id_pelajaran; ?></td>
@@ -39,8 +39,8 @@
         <td><?= $g->keterangan; ?></td>
         <td>
           <center>
-            <a class="btn btn-sm btn-primary" href="<?= base_url('admin/dataPenempatan/updateData/' . $j->id_penempatan); ?>"><i class="fas fa-edit"></i></a>
-            <a onclick="return confirm('Yakin hapus?')" class="btn btn-sm btn-danger" href="<?= base_url('admin/dataPenempatan/deleteData/' . $j->id_penempatan); ?>"><i class="fas fa-trash"></i></a>
+            <a class="btn btn-sm btn-primary" href="<?= base_url('admin/dataPenempatan/updateData/' . $g->id_penempatan); ?>"><i class="fas fa-edit"></i></a>
+            <a onclick="return confirm('Yakin hapus?')" class="btn btn-sm btn-danger" href="<?= base_url('admin/dataPenempatan/deleteData/' . $g->id_penempatan); ?>"><i class="fas fa-trash"></i></a>
           </center>
         </td>
       </tr>

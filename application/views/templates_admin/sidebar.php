@@ -28,6 +28,7 @@
             <a class="collapse-item" href="<?= base_url('admin/dataPegawai') ?>">Data Pegawai</a>
             <a class="collapse-item" href="<?= base_url('admin/dataJabatan'); ?>">Data Jabatan</a>
             <a class="collapse-item" href="<?= base_url('admin/dataKelas'); ?>">Data Kelas</a>
+            <a class="collapse-item" href="<?= base_url('admin/dataAkademik'); ?>">Data Akademik</a>
             <a class="collapse-item" href="<?= base_url('admin/dataPelajaran'); ?>">Data Pelajaran</a>
           </div>
         </div>

@@ -102,14 +102,6 @@
         </div>
 
         <div class="form-group">
-          <label for="">Peta via Google Map Generator</label>
-          <p>Link Generator Map Google</p>
-          <p><a href="https://google-map-generator.com/" target="_blank">Klik</a></p>
-          <input type="url" name="peta" class="form-control">
-          <?= form_error('peta', '<div class="text-small text-danger">', '</div>') ?>
-        </div>
-
-        <div class="form-group">
           <label for="">Hak Akses</label>
           <select name="hak_akses" id="" class="form-control">
             <option value="">--Pilih Hak Akses--</option>

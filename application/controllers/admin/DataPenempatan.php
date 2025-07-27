@@ -93,7 +93,7 @@ class Datapenempatan extends CI_Controller
     $this->_rules();
 
     if ($this->form_validation->run() == FALSE) {
-      $id = $this->insert->post('id_penempatan');
+      $id = $this->insert->post('id_penempatan'$data);
       $this->updateData($id);
     } else {
       $id           = $this->input->post('id_penempatan');

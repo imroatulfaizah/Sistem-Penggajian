@@ -57,11 +57,8 @@
                                 <td>:</td>
                                 <td><?= $p->alamat; ?></td>
                             </tr>
-                            <tr>
-                                <td>Peta</td>
-                                <td>:</td>
-                                <td>
-                                    <div class="mapouter">
+                            <tr> 
+                                <div class="mapouter">
                                         <div class="gmap_canvas"><iframe width="auto" height="auto" id="gmap_canvas" src="<?= $p->peta; ?>
                                         " frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><a href="https://123movies-to.org"></a><br>
                                             <style>

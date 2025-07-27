@@ -59,7 +59,6 @@ class DataPegawai extends CI_Controller
       $email         = $this->input->post('email');
       $pendidikan    = $this->input->post('pendidikan');
       $alamat        = $this->input->post('alamat');
-      $peta          = $this->input->post('peta');
       $photo         = $_FILES['photo']['name'];
       if ($photo = '') {
       } else {
@@ -88,7 +87,6 @@ class DataPegawai extends CI_Controller
         'email'         => $email,
         'pendidikan'    => $pendidikan,
         'alamat'        => $alamat,
-        'peta'          => $peta,
       );
 
       $this->penggajianModel->insert_data($data, 'data_pegawai');
@@ -137,7 +135,6 @@ class DataPegawai extends CI_Controller
       $email         = $this->input->post('email');
       $pendidikan    = $this->input->post('pendidikan');
       $alamat        = $this->input->post('alamat');
-      $peta          = $this->input->post('peta');
       $photo         = $_FILES['photo']['name'];
       if ($photo) {
         $config['upload_path'] = './assets/photo';
@@ -164,7 +161,6 @@ class DataPegawai extends CI_Controller
         'email'         => $email,
         'pendidikan'    => $pendidikan,
         'alamat'        => $alamat,
-        'peta'          => $peta,
         'hak_akses'     => $hak_akses,
       );
       $where = array('id_pegawai' => $id);
@@ -200,7 +196,6 @@ class DataPegawai extends CI_Controller
     $this->form_validation->set_rules('tanggal_masuk', 'Tanggal Masuk', 'required');
     $this->form_validation->set_rules('jabatan', 'Jabatan', 'required');
     $this->form_validation->set_rules('status', 'Status', 'required');
-    $this->form_validation->set_rules('peta', 'Peta', 'required');
     $this->form_validation->set_rules('alamat', 'Alamat', 'required');
   }
   public function detaildata($id)

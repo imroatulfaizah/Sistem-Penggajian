@@ -25,13 +25,18 @@
         </div>
         <div class="form-group">
           <label for="">Nominal Tunjangan</label>
-          <input type="number" name="nominal" class="form-control" value="<?= $j->nominal; ?>">
+          <input type="text" name="nominal" class="form-control" value="<?= $j->nominal; ?>">
           <?= form_error('nominal', '<div class="text-small text-danger">', '</div>') ?>
         </div>
         <div class="form-group">
           <label for="">Status Pembayaran</label>
           <input type="text" name="is_paid" class="form-control" value="<?= $j->is_paid; ?>">
           <?= form_error('is_paid', '<div class="text-small text-danger">', '</div>') ?>
+        </div>
+        <div class="form-group">
+          <label for="">Nomor Kwitansi</label>
+          <input type="number" name="nomor_kwitansi" class="form-control" value="<?= $j->nomor_kwitansi; ?>">
+          <?= form_error('nomor_kwitansi', '<div class="text-small text-danger">', '</div>') ?>
         </div>
 
         <button type="submit" class="btn btn-success">Update</button>

@@ -46,12 +46,14 @@ class DataInsentif extends CI_Controller
       $id_pegawai = $this->input->post('id_pegawai');
       $nama_insentif = $this->input->post('nama_insentif');
       $nominal = $this->input->post('nominal');
+      $nomor_kwitansi = $this->input->post('nomor_kwitansi');
       $is_paid = $this->input->post('is_paid');
 
       $data = array(
         'id_pegawai' => $id_pegawai,
         'nama_insentif' => $nama_insentif,
         'nominal' => $nominal,
+        'nomor_kwitansi' => $nomor_kwitansi,
         'is_paid' => $is_paid,
       );
 
@@ -90,12 +92,14 @@ class DataInsentif extends CI_Controller
       $nip   = $this->input->post('nip');
       $nama_insentif = $this->input->post('nama_insentif');  
       $nominal = $this->input->post('nominal');
+      $nomor_kwitansi = $this->input->post('nomor_kwitansi');
       $is_paid   = $this->input->post('is_paid');
 
       $data = array(
         'nip' => $nip,
         'nama_insentif'   => $nama_insentif,
         'nominal' => $nominal,
+        'nomor_kwitansi' => $nomor_kwitansi,
         'is_paid'   => $is_paid,
       );
 
@@ -139,6 +143,7 @@ class DataInsentif extends CI_Controller
     $this->form_validation->set_rules('nip', 'NIP', 'required');
     $this->form_validation->set_rules('nama_insentif', 'Nama Insentif', 'required');
     $this->form_validation->set_rules('nominal', 'Nominal Tunjangan', 'required');
+    $this->form_validation->set_rules('nomor_kwitansi', 'Nomor Kwitansi', 'required');
     $this->form_validation->set_rules('is_paid', 'Is Paid', 'required');
   }
 }

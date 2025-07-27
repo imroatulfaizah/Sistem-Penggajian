@@ -17,6 +17,7 @@
       <th class="text-center">Nama Insentif</th>
       <th class="text-center">Nominal Tunjangan</th>
       <th class="text-center">Status Pembayaran</th>
+      <th class="text-center">Nomor Kwitansi</th>
       <th class="text-center">Action</th>
     </tr>
 
@@ -35,6 +36,7 @@
                 <span style="color: red;">Belum dibayar</span>
             <?php endif; ?>
         </td>
+        <td><?= $j->nomor_kwitansi; ?></td>
         <!-- <td>Rp. <= number_format($j->nominal, 0, ',', '.'); ?>,-</td>
         <td>Rp. <= number_format($j->tj_transport, 0, ',', '.'); ?>,-</td>
         ?php $total = $j->gaji_pokok + $j->tj_transport + $j->uang_makan; ?>

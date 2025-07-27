@@ -95,7 +95,7 @@
           <td><?= $a->alpha; ?></td>
           <td>
             <center>
-              <!--<a class="btn btn-sm btn-primary" href="<?= base_url('admin/dataAbsensi/updateData/' . $a->id_kehadiran); ?>"><i class="fas fa-edit"></i></a>-->
+              <a class="btn btn-sm btn-primary" href="<?= base_url('admin/dataAbsensi/updateData/' . $a->id_kehadiran); ?>"><i class="fas fa-edit"></i></a>
               <a onclick="return confirm('Yakin hapus?')" class="btn btn-sm btn-danger" href="<?= base_url('admin/dataAbsensi/deleteData/' . $a->id_kehadiran); ?>"><i class="fas fa-trash"></i></a>
             </center>
           </td>

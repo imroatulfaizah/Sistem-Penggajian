@@ -20,8 +20,8 @@
     <br>
 
     <center>
+        <img src="<?= base_url('assets/img/mts.png'); ?>" alt="Logo MTS Nurul Mubtadiin" style="width: 100px; height: auto; margin-bottom: 15px;">
         <h1>MTS Nurul Mubtadiin</h1>
-        <br>
         <h2>Daftar Data Pelajaran</h2>
     </center>
 

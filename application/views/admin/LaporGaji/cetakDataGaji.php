@@ -17,6 +17,7 @@
 <body>
 
   <center>
+    <img src="<?= base_url('assets/img/mts.png'); ?>" alt="Logo MTS Nurul Mubtadiin" style="width: 100px; height: auto; margin-bottom: 15px;">
     <h1>MTS Nurul Mubtadiin</h1>
     <h2>Daftar Gaji Pegawai</h2>
   </center>
@@ -65,8 +66,7 @@
     <?php
     $no = 1;
     foreach ($cetakGaji as $g) : ?>
-      <?php $potongan = $g->alpha * $alpha; ?>
-      <tr>s
+      <tr>
         <td><?= $no++; ?></td>
         <td><?= $g->nip; ?></td>
         <td><?= $g->nama_pegawai; ?></td>

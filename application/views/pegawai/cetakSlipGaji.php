@@ -16,6 +16,7 @@
 <body>
 
   <center>
+    <img src="<?= base_url('assets/img/mts.png'); ?>" alt="Logo MTS Nurul Mubtadiin" style="width: 100px; height: auto; margin-bottom: 15px;">
     <h4>TANDA TERIMA BISYAROH GURU </h4>			
     <h4>MTs NURUL MUBTADIIN </h4>				
     <h4>JATISARI PURWODADI PASURUAN </h4>

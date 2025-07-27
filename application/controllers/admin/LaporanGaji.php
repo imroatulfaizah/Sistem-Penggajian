@@ -53,7 +53,7 @@ class LaporanGaji extends CI_Controller
     data_jabatan.nama_jabatan, data_jabatan.tunjangan_jabatan, data_jabatan.tunjangan_transport, data_jabatan.upah_mengajar, 
     data_kehadiran.hadir 
     FROM data_pegawai INNER JOIN data_kehadiran ON data_kehadiran.nip=data_pegawai.nip 
-    INNER JOIN data_jabatan ON data_jabatan.nama_jabatan=data_pegawai.jabatan 
+    INNER JOIN data_jabatan ON data_jabatan.id_jabatan=data_pegawai.jabatan 
     WHERE data_kehadiran.bulan='$bulanTahun' ORDER BY data_pegawai.nama_pegawai ASC")->result();
     $this->load->view('templates_admin/header', $data);
     $this->load->view('admin/LaporGaji/cetakDataGaji', $data);

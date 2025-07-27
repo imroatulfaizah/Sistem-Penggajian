@@ -16,6 +16,7 @@
 <body>
 
   <center>
+    <img src="<?= base_url('assets/img/mts.png'); ?>" alt="Logo MTS Nurul Mubtadiin" style="width: 100px; height: auto; margin-bottom: 15px;">
     <h1>MTS Nurul Mubtadiin</h1>
     <h2>Laporan Kehadiran Pegawai</h2>
   </center>

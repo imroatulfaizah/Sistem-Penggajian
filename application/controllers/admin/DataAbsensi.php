@@ -111,7 +111,7 @@ class DataAbsensi extends CI_Controller
       $post = $this->input->post();
 
       foreach ($post['bulan'] as $key => $value) {
-        if ($post['bulan'][$key] != '' || $post['nik'][$key] != '') {
+        if ($post['bulan'][$key] != '' || $post['nip'][$key] != '') {
           $simpan[] = array(
             'bulan'         => $post['bulan'][$key],
             'nip'           => $post['nip'][$key],
@@ -132,7 +132,7 @@ class DataAbsensi extends CI_Controller
           <span aria-hidden="true">&times;</span>
         </button>
       </div>');
-      redirect('admin/formInputAbsensi');
+      redirect('admin/dataAbsensi');
     }
 
     $data['title'] = "Form Input Absensi";
@@ -147,7 +147,7 @@ class DataAbsensi extends CI_Controller
       $bulanTahun = $bulan . $tahun;
     }
 
-    $data['inputAbsensi'] = $this->db->query("SELECT data_pegawai.*, data_jabatan.nama_jabatan FROM data_pegawai INNER JOIN data_jabatan ON data_pegawai.jabatan = data_jabatan.nama_jabatan WHERE NOT EXISTS(SELECT * FROM data_kehadiran WHERE bulan = '$bulanTahun' AND data_pegawai.nip = data_kehadiran.nip) ORDER BY data_pegawai.nama_pegawai ASC")->result();
+    $data['inputAbsensi'] = $this->db->query("SELECT data_pegawai.*, data_jabatan.nama_jabatan FROM data_pegawai INNER JOIN data_jabatan ON data_pegawai.jabatan = data_jabatan.id_jabatan WHERE NOT EXISTS(SELECT * FROM data_kehadiran WHERE bulan = '$bulanTahun' AND data_pegawai.nip = data_kehadiran.nip) ORDER BY data_pegawai.nama_pegawai ASC")->result();
     $this->load->view('templates_admin/header', $data);
     $this->load->view('templates_admin/sidebar');
     $this->load->view('admin/RekapAbsen/formInputAbsensi', $data);

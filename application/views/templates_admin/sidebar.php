@@ -34,7 +34,7 @@
           </div>
         </div>
       </li>
-      <li class="nav-item">
+      <li class="nav-item active">
         <a class="nav-link" href="<?= base_url('admin/dataAbsensi/generate_qr'); ?>">
           <i class="fas fa-fw fa-money-check-alt"></i>
           <span>Generate QR Code</span></a>

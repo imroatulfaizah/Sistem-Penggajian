@@ -39,18 +39,26 @@
         <td><?= $g->keterangan; ?></td>
         <td>
           <center>
-            <form style="display:inline-block;" method="post" action="<?= site_url('pegawai/dataAbsensi/clockIn/' . $g->id_penempatan); ?>">
-                <input type="hidden" name="lat" id="lat">
-                <input type="hidden" name="lon" id="lon">
-                <button type="submit" class="btn btn-sm btn-primary">
-                    Clock In <i class="fas fa-clock"></i>
-                </button>
+            <form style="display:inline-block;" method="post" action="<?= site_url('pegawai/dataAbsensi/clockIn/' . $g->id_penempatan); ?>" class="form-absensi">
+              <input type="hidden" name="lat" class="lat">
+              <input type="hidden" name="lon" class="lon">
+              <button type="button" class="btn btn-sm btn-primary btn-clockin">
+                Clock In <i class="fas fa-clock"></i>
+              </button>
             </form>
-            <form style="display:inline-block;" method="post" action="<?= site_url('pegawai/dataAbsensi/clockOut/' . $g->id_penempatan); ?>">
-                <input type="hidden" name="lat" id="lat">
-                <input type="hidden" name="lon" id="lon">
-                <button type="submit" class="btn btn-sm btn-success">
-                    Clock Out <i class="fas fa-clock"></i>
+
+            <form style="display:inline-block;" method="post" action="<?= site_url('pegawai/dataAbsensi/clockOut/' . $g->id_penempatan); ?>" class="form-absensi">
+              <input type="hidden" name="lat" class="lat">
+              <input type="hidden" name="lon" class="lon">
+              <button type="button" class="btn btn-sm btn-success btn-clockout">
+                Clock Out <i class="fas fa-clock"></i>
+              </button>
+            </form>
+            <form style="display:inline-block;" method="post" action="<?= site_url('pegawai/dataAbsensi/detailAbsensi/' . $g->id_penempatan); ?>">
+                <input type="hidden" name="lat" class="lat">
+                <input type="hidden" name="lon" class="lon">
+                <button type="submit" class="btn btn-sm btn-primary">
+                    Details <i class="fas fa-info-circle"></i>
                 </button>
             </form>
           </center>
@@ -61,12 +69,29 @@
 </div>
 
 <script>
-navigator.geolocation.getCurrentPosition(function(position) {
-  document.getElementById('lat').value = position.coords.latitude;
-  document.getElementById('lon').value = position.coords.longitude;
-  document.getElementById('location').value = position.coords.latitude + ", " + position.coords.longitude;
-}, function(error) {
-  console.error(error);
-  document.getElementById('location').value = "❌ Gagal mendeteksi lokasi!";
-});
+  document.addEventListener("DOMContentLoaded", function () {
+    const buttons = document.querySelectorAll(".btn-clockin, .btn-clockout");
+
+    buttons.forEach(button => {
+      button.addEventListener("click", function () {
+        const form = button.closest("form");
+
+        navigator.geolocation.getCurrentPosition(
+          function (position) {
+            const lat = form.querySelector(".lat");
+            const lon = form.querySelector(".lon");
+
+            lat.value = position.coords.latitude;
+            lon.value = position.coords.longitude;
+
+            form.submit(); // submit hanya setelah lokasi berhasil diisi
+          },
+          function (error) {
+            alert("Gagal mengambil lokasi: " + error.message);
+          }
+        );
+      });
+    });
+  });
 </script>
+

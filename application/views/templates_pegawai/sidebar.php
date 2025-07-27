@@ -16,31 +16,37 @@
       <hr class="sidebar-divider my-0">
 
       <!-- Nav Item - Dashboard -->
-      <li class="nav-item">
+      <li class="nav-item active">
         <a class="nav-link" href="<?= base_url('pegawai/dashboard'); ?>">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span></a>
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item active">
         <a class="nav-link" href="<?= base_url('pegawai/dataAbsensi'); ?>">
           <i class="fas fa-fw fa-money-check-alt"></i>
           <span>Absensi Kehadiran</span></a>
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item active">
         <a class="nav-link" href="<?= base_url('pegawai/dataPenempatan'); ?>">
           <i class="fas fa-fw fa-money-check-alt"></i>
           <span>Jadwal Mengajar</span></a>
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item active">
         <a class="nav-link" href="<?= base_url('pegawai/dataGaji'); ?>">
           <i class="fas fa-fw fa-money-check-alt"></i>
           <span>Data Gaji</span></a>
       </li>
+
+      <li class="nav-item active">
+        <a class="nav-link" href="<?= base_url('pegawai/dataAbsensi/detailKehadiran'); ?>">
+          <i class="fas fa-fw fa-money-check-alt"></i>
+          <span>Rekap Absensi</span></a>
+      </li>
       
-      <li class="nav-item">
+      <li class="nav-item active">
         <a class="nav-link" href="<?= base_url('pegawai/GantiPassword'); ?>">
           <i class="fas fa-fw fa-lock"></i>
           <span>Ganti Password</span></a>

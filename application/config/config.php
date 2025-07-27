@@ -24,7 +24,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 |
 |nama domain
 */
-$config['base_url'] = 'http://localhost/Sistem-Penggajian/';
+$config['base_url'] = 'http://localhost:8080/Sistem-Penggajian/';
 
 /*
 |--------------------------------------------------------------------------

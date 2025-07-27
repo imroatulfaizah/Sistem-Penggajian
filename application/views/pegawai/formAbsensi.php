@@ -11,7 +11,7 @@
   <div class="card" style="width: 60%; margin-bottom:100px;">
     <div class="card-body">
 
-      <form method="post" action="<?= site_url('pegawai/dataAbsensi/do_attend'); ?>">
+      <form id="attendanceForm" method="post" action="<?= site_url('pegawai/dataAbsensi/do_attend'); ?>">
 
         <div class="form-group">
           <label for="">Nama</label>
@@ -42,7 +42,9 @@
         <!-- Area kamera HTML5 QR Code -->
         <div id="reader" style="width: 100%; max-width: 400px; margin: 20px 0;"></div>
 
-        <button type="button" class="btn btn-primary mt-3" onclick="startScan()">✅ Scan & Clock In</button>
+        <button type="button" class="btn btn-primary mt-3" onclick="startScan('in')">Scan & Clock In</button>
+        <button type="button" class="btn btn-danger mt-3" onclick="startScan('out')">Scan & Clock Out</button>
+
       </form>
     </div>
   </div>
@@ -63,7 +65,16 @@ navigator.geolocation.getCurrentPosition(function (position) {
 });
 
 // Fungsi memulai QR scan
-function startScan() {
+function startScan(mode) {
+
+  const form = document.getElementById('attendanceForm');
+
+  if (mode === 'in') {
+    form.action = '<?= site_url('pegawai/dataAbsensi/do_attend'); ?>';
+  } else {
+    form.action = '<?= site_url('pegawai/dataAbsensi/do_attend_out'); ?>';
+  }
+
   const qrReader = new Html5Qrcode("reader");
 
   qrReader.start(

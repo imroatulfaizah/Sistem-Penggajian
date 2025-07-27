@@ -11,24 +11,54 @@
       <form action="<?= base_url('admin/dataPenempatan/tambahDataAksi') ?>" method="post">
 
         <div class="form-group">
-          <label for="">ID Pelajaran</label>
-          <input type="text" name="nama_penempatan" class="form-control">
-          <?= form_error('nama_penempatan', '<div class="text-small text-danger">', '</div>') ?>
+          <label for="">ID Penempatan</label>
+          <input type="text" name="id_penempatan" class="form-control">
+          <?= form_error('id_penempatan', '<div class="text-small text-danger">', '</div>') ?>
         </div>
         <div class="form-group">
-          <label for="">Tunjangan penempatan</label>
+          <label for="">Id Pelajaran</label>
+          <input type="number" name="id_pelajaran" class="form-control">
+          <?= form_error('id_pelajaran', '<div class="text-small text-danger">', '</div>') ?>
+        </div>
+        <div class="form-group">
+          <label for="">Id Kelas</label>
+          <input type="number" name="id_kelas" class="form-control">
+          <?= form_error('id_kelas', '<div class="text-small text-danger">', '</div>') ?>
+        </div>
+        <div class="form-group">
+          <label for="">Tunjangan Penempatan</label>
           <input type="number" name="tunjangan_penempatan" class="form-control">
           <?= form_error('tunjangan_penempatan', '<div class="text-small text-danger">', '</div>') ?>
         </div>
         <div class="form-group">
-          <label for="">Tunjangan Transport</label>
-          <input type="number" name="tunjangan_transport" class="form-control">
-          <?= form_error('tunjangan_transport', '<div class="text-small text-danger">', '</div>') ?>
+          <label for="">Id Akademik</label>
+          <input type="number" name="id_akademik" class="form-control">
+          <?= form_error('id_akademik', '<div class="text-small text-danger">', '</div>') ?>
         </div>
         <div class="form-group">
-          <label for="">Upah Mengajar</label>
-          <input type="number" name="upah_mengajar" class="form-control">
-          <?= form_error('upah_mengajar', '<div class="text-small text-danger">', '</div>') ?>
+          <label for="">NIP</label>
+          <input type="number" name="nip" class="form-control">
+          <?= form_error('nip', '<div class="text-small text-danger">', '</div>') ?>
+        </div>
+        <div class="form-group">
+          <label for="">Jam Mulai</label>
+          <input type="number" name="jam_mulai" class="form-control">
+          <?= form_error('jam_mulai', '<div class="text-small text-danger">', '</div>') ?>
+        </div>
+        <div class="form-group">
+          <label for="">Jam Berakhir</label>
+          <input type="number" name="jam_berakhir" class="form-control">
+          <?= form_error('jam_berakhir', '<div class="text-small text-danger">', '</div>') ?>
+        </div>
+        <div class="form-group">
+          <label for="">Total Jam</label>
+          <input type="number" name="total_jam" class="form-control">
+          <?= form_error('total_jam', '<div class="text-small text-danger">', '</div>') ?>
+        </div>
+        <div class="form-group">
+          <label for="">Keterangan</label>
+          <input type="number" name="keterangan" class="form-control">
+          <?= form_error('keterangan', '<div class="text-small text-danger">', '</div>') ?>
         </div>
 
         <button type="submit" class="btn btn-success">Submit</button>

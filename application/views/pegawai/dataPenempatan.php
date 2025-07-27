@@ -17,6 +17,7 @@
         <th class="text-center">ID Kelas</th>
         <th class="text-center">ID Akademik</th>
         <th class="text-center">NIP</th>
+        <th class="text-center">Hari</th>
         <th class="text-center">Jam Mulai</th>
         <th class="text-center">Jam Akhir</th>
         <th class="text-center">Total Jam</th>
@@ -33,6 +34,7 @@
         <td><?= $g->id_kelas; ?></td>
         <td><?= $g->id_akademik; ?></td>
         <td><?= $g->nip; ?></td>
+        <td><?= $g->hari; ?></td>
         <td><?= $g->jam_mulai; ?></td>
         <td><?= $g->jam_akhir; ?></td>
         <td><?= $g->total_jam; ?></td>

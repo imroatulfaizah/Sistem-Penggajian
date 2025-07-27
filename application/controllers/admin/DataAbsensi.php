@@ -31,7 +31,7 @@ class DataAbsensi extends CI_Controller
       $bulanTahun = $bulan . $tahun;
     }
 
-    $data['absensi'] = $this->db->query("SELECT data_kehadiran.*, data_pegawai.nama_pegawai, data_pegawai.jenis_kelamin, data_pegawai.jabatan FROM data_kehadiran INNER JOIN data_pegawai ON data_kehadiran.nip = data_pegawai.nip INNER JOIN data_jabatan ON data_pegawai.jabatan = data_jabatan.nama_jabatan WHERE data_kehadiran.bulan = '$bulanTahun' ORDER BY data_pegawai.nama_pegawai ASC")->result();
+    $data['absensi'] = $this->db->query("SELECT data_kehadiran.*, data_pegawai.nama_pegawai, data_pegawai.jenis_kelamin, data_pegawai.jabatan FROM data_kehadiran INNER JOIN data_pegawai ON data_kehadiran.nip = data_pegawai.nip INNER JOIN data_jabatan ON data_pegawai.jabatan = data_jabatan.id_jabatan WHERE data_kehadiran.bulan = '$bulanTahun' ORDER BY data_pegawai.nama_pegawai ASC")->result();
 
     $this->load->view('templates_admin/header', $data);
     $this->load->view('templates_admin/sidebar');
@@ -132,7 +132,7 @@ class DataAbsensi extends CI_Controller
           <span aria-hidden="true">&times;</span>
         </button>
       </div>');
-      redirect('admin/dataAbsensi');
+      redirect('admin/formInputAbsensi');
     }
 
     $data['title'] = "Form Input Absensi";
@@ -229,74 +229,49 @@ class DataAbsensi extends CI_Controller
     $this->form_validation->set_rules('alpha', 'Alpha', 'required');
   }
 
-  // public function generate_qr() {
-  //   $this->load->helper('qr');
-  //   $this->load->library('ciqrcode');
-
-  //   $code = generate_daily_unique_code();
-  //   $filename = 'qr/' . $code . '.png';
-
-  //   if (!file_exists(FCPATH . $filename)) {
-  //       $params['data'] = $code;
-  //       $params['level'] = 'H';
-  //       $params['size'] = 10;
-  //       $params['savename'] = FCPATH . $filename;
-  //       $this->ciqrcode->generate($params);
-  //   }
-
-  //   // Dapatkan data pegawai
-  //   //$data['pegawai'] = $this->session->userdata('users')
-  //   $data['qr_file'] = base_url($filename);
-
-  //   // var_dump($data);
-  //   // die();
-
-  //   $this->load->view('admin/QRCode/absensi_scan', $data);
-  // }
-
   public function generate_qr()
-{
-    $this->load->helper('qr');
-    $this->load->library('ciqrcode');
+  {
+      $this->load->helper('qr');
+      $this->load->library('ciqrcode');
 
-    $now = new DateTime('now', new DateTimeZone('Asia/Jakarta'));
-    $code = generate_daily_unique_code($now);
-    $filename = 'qr/' . $code . '.png';
+      $now = new DateTime('now', new DateTimeZone('Asia/Jakarta'));
+      $code = generate_daily_unique_code($now);
+      $filename = 'qr/' . $code . '.png';
 
-    // Generate QR jika belum ada
-    if (!file_exists(FCPATH . $filename)) {
-        $params['data'] = $code;
-        $params['level'] = 'H';
-        $params['size'] = 10;
-        $params['savename'] = FCPATH . $filename;
-        $this->ciqrcode->generate($params);
-    }
+      // Generate QR jika belum ada
+      if (!file_exists(FCPATH . $filename)) {
+          $params['data'] = $code;
+          $params['level'] = 'H';
+          $params['size'] = 10;
+          $params['savename'] = FCPATH . $filename;
+          $this->ciqrcode->generate($params);
+      }
 
-    // Tentukan sesi dan waktu berikutnya
-    $hour = (int)$now->format('H');
-    if ($hour < 8) {
-        $session_label = 'Pagi';
-        $next_shift_time = '08:00';
-    } elseif ($hour < 17) {
-        $session_label = 'Pagi';
-        $next_shift_time = '17:00';
-    } else {
-        $session_label = 'Sore';
-        $next_shift_time = '08:00 (besok)';
-    }
+      // Tentukan sesi dan waktu berikutnya
+      $hour = (int)$now->format('H');
+      if ($hour < 8) {
+          $session_label = 'Pagi';
+          $next_shift_time = '08:00';
+      } elseif ($hour < 17) {
+          $session_label = 'Pagi';
+          $next_shift_time = '17:00';
+      } else {
+          $session_label = 'Sore';
+          $next_shift_time = '08:00 (besok)';
+      }
 
-    // Kirim ke view
-    $data = [
-        'qr_file' => base_url($filename),
-        'session_label' => $session_label,
-        'next_shift_time' => $next_shift_time,
-        'title' => 'QR Code Absensi Aktif',
-    ];
+      // Kirim ke view
+      $data = [
+          'qr_file' => base_url($filename),
+          'session_label' => $session_label,
+          'next_shift_time' => $next_shift_time,
+          'title' => 'QR Code Absensi Aktif',
+      ];
 
-    $this->load->view('templates_admin/header', $data);
-    $this->load->view('templates_admin/sidebar');
-    $this->load->view('admin/QRCode/absensi_scan', $data);
-    $this->load->view('templates_admin/footer');
-}
+      $this->load->view('templates_admin/header', $data);
+      $this->load->view('templates_admin/sidebar');
+      $this->load->view('admin/QRCode/absensi_scan', $data);
+      $this->load->view('templates_admin/footer');
+  }
 
 }

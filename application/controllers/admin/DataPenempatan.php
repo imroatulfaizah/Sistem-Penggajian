@@ -45,18 +45,26 @@ class Datapenempatan extends CI_Controller
     } else {
       $id_pelajaran = $this->input->post('id_pelajaran');
       $id_kelas = $this->input->post('id_kelas');
-      $tunjangan_penempatan = $this->input->post('tunjangan_penempatan');
       $id_akademik = $this->input->post('id_akademik');
       $nip = $this->input->post('nip');
       $jam_mulai = $this->input->post('jam_mulai');
       $jam_akhir = $this->input->post('jam_akhir');
-      $total_jam = $this->input->post('total_jam');
       $keterangan = $this->input->post('keterangan');
+
+      $mulai = DateTime::createFromFormat('H:i', $jam_mulai);
+      $akhir = DateTime::createFromFormat('H:i', $jam_akhir);
+
+        if ($mulai && $akhir) {
+          if ($akhir < $mulai) {
+            $akhir->modify('+1 day');
+        }
+            $interval = $mulai->diff($akhir);
+            $total_jam = $interval->format('%H:%I:%S'); // Format HH:MM:SS
+        } 
 
       $data = array(
         'id_pelajaran' => $id_pelajaran,
         'id_kelas' => $id_kelas,
-        'tunjangan_penempatan' => $tunjangan_penempatan,
         'id_akademik' => $id_akademik,
         'nip' => $nip,
         'jam_mulai' => $jam_mulai,
@@ -93,24 +101,35 @@ class Datapenempatan extends CI_Controller
     $this->_rules();
 
     if ($this->form_validation->run() == FALSE) {
-      $id = $this->insert->post('id_penempatan'$data);
+      $id = $this->input->post('id_penempatan');
       $this->updateData($id);
     } else {
       $id           = $this->input->post('id_penempatan');
       $id_pelajaran = $this->input->post('id_pelajaran');
       $id_kelas = $this->input->post('id_kelas');
-      $tunjangan_penempatan = $this->input->post('tunjangan_penempatan');
       $id_akademik = $this->input->post('id_akademik');
       $nip = $this->input->post('nip');
       $jam_mulai = $this->input->post('jam_mulai');
       $jam_akhir = $this->input->post('jam_akhir');
-      $total_jam = $this->input->post('total_jam');
       $keterangan = $this->input->post('keterangan');
+
+      $mulai = DateTime::createFromFormat('H:i', $jam_mulai);
+      $akhir = DateTime::createFromFormat('H:i', $jam_akhir);
+
+      if ($mulai && $akhir) {
+        if ($akhir < $mulai) {
+          $akhir->modify('+1 day');
+      }
+          $interval = $mulai->diff($akhir);
+          $total_jam = $interval->h . " jam " . $interval->i . " menit";
+        } else {
+            $total_jam = "0 jam 0 menit";
+        }
+
 
       $data = array(
         'id_pelajaran' => $id_pelajaran,
         'id_kelas' => $id_kelas,
-        'tunjangan_penempatan' => $tunjangan_penempatan,
         'id_akademik' => $id_akademik,
         'nip' => $nip,
         'jam_mulai' => $jam_mulai,
@@ -158,12 +177,10 @@ class Datapenempatan extends CI_Controller
   {
     $this->form_validation->set_rules('id_pelajaran', 'ID Pelajaran', 'required');
     $this->form_validation->set_rules('id_kelas', 'ID Kelas', 'required');
-    $this->form_validation->set_rules('tunjangan_penempatan', 'Tunjangan Penempatan', 'required');
     $this->form_validation->set_rules('id_akademik', 'ID Akademic', 'required');
     $this->form_validation->set_rules('nip', 'NIP', 'required');
     $this->form_validation->set_rules('jam_mulai', 'Jam Mulai', 'required');
     $this->form_validation->set_rules('jam_akhir', 'Jam Akhir', 'required');
-    $this->form_validation->set_rules('total_jam', 'Total Jam', 'required');
     $this->form_validation->set_rules('keterangan', 'Keterangan', 'required');
   }
 }

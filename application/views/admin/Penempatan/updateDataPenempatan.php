@@ -8,10 +8,9 @@
 
   <div class="card" style="width: 60%; margin-bottom:100px;">
     <div class="card-body">
-
       <?php foreach($penempatan as $j): ?>
       <form action="<?= base_url('admin/dataPenempatan/updateDataAksi') ?>" method="post">
-
+      <input type="hidden" name="id_penempatan" value="<?= $j->id_penempatan; ?>">
         <div class="form-group">
           <label for="">Id Pelajaran</label>
           <input type="hidden" name="id_pelajaran" value="<?= $j->id_pelajaran; ?>">
@@ -21,36 +20,31 @@
         <div class="form-group">
           <label for="">Id Kelas</label>
           <input type="number" name="id_kelas" class="form-control" value="<?= $j->id_kelas; ?>">
-          <?= form_error('id_kelasn', '<div class="text-small text-danger">', '</div>') ?>
+          <?= form_error('id_kelas', '<div class="text-small text-danger">', '</div>') ?>
         </div>
         <div class="form-group">
           <label for="">Id Akademik</label>
-          <input type="number" name="id_akademik" class="form-control">
+          <input type="number" name="id_akademik" class="form-control" value="<?= $j->id_akademik; ?>">
           <?= form_error('id_akademik', '<div class="text-small text-danger">', '</div>') ?>
         </div>
         <div class="form-group">
           <label for="">NIP</label>
-          <input type="number" name="nip" class="form-control">
+          <input type="number" name="nip" class="form-control" value="<?= $j->nip; ?>">
           <?= form_error('nip', '<div class="text-small text-danger">', '</div>') ?>
         </div>
         <div class="form-group">
           <label for="">Jam Mulai</label>
-          <input type="number" name="jam_mulai" class="form-control" value="<?= $j->jam_mulai; ?>">
+          <input type="time" name="jam_mulai" class="form-control" value="<?= $j->jam_mulai; ?>">
           <?= form_error('jam_mulai', '<div class="text-small text-danger">', '</div>') ?>
         </div>
         <div class="form-group">
-          <label for="">Jam Berakhir</label>
-          <input type="number" name="jam_berakhir" class="form-control">
+          <label for="">Jam Akhir</label>
+          <input type="time" name="jam_akhir" class="form-control" value="<?= $j->jam_akhir; ?>">
           <?= form_error('jam_berakhir', '<div class="text-small text-danger">', '</div>') ?>
         </div>
         <div class="form-group">
-          <label for="">Total Jam</label>
-          <input type="number" name="total_jam" class="form-control" value="<?= $j->total_jam; ?>">
-          <?= form_error('total_jam', '<div class="text-small text-danger">', '</div>') ?>
-        </div>
-        <div class="form-group">
           <label for="">Keterangan</label>
-          <input type="number" name="keterangan" class="form-control">
+          <input type="text" name="keterangan" class="form-control" value="<?= $j->keterangan; ?>">
           <?= form_error('keterangan', '<div class="text-small text-danger">', '</div>') ?>
         </div>
 

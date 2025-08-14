@@ -13,7 +13,7 @@
   <table class="table table-bordered table-stiped mt-2">
     <tr>
       <th class="text-center">ID Insentif</th>
-      <th class="text-center">ID Pegawai</th>
+      <th class="text-center">NIP</th>
       <th class="text-center">Nama Insentif</th>
       <th class="text-center">Nominal Tunjangan</th>
       <th class="text-center">Status Pembayaran</th>

@@ -19,7 +19,10 @@ class Datapenempatan extends CI_Controller
   public function index()
   {
     $data['title'] = "Data Penempatan";
-    $data['penempatan'] = $this->penggajianModel->get_data('data_penempatan')->result();
+    $data['penempatan'] = $this->db->query("SELECT a.*, b.nama_pelajaran, c.nama_kelas, d.tahun_akademik FROM data_penempatan a
+                        JOIN data_pelajaran b ON a.id_pelajaran = b.id_pelajaran
+                        JOIN data_kelas c ON a.id_kelas = c.id_kelas
+                        JOIN data_akademik d ON a.id_akademik = d.id_akademik")->result();
     $this->load->view('templates_admin/header', $data);
     $this->load->view('templates_admin/sidebar');
     $this->load->view('admin/Penempatan/dataPenempatan', $data);
@@ -29,7 +32,10 @@ class Datapenempatan extends CI_Controller
   public function tambahData()
   {
     $data['title'] = "Tambah Data Penempatan";
-
+    $data['pelajaran'] = $this->penggajianModel->get_data('data_pelajaran')->result();
+    $data['kelas'] = $this->penggajianModel->get_data('data_kelas')->result();
+    $data['pegawai'] = $this->penggajianModel->get_data('data_pegawai')->result();
+    $data['akademik'] = $this->penggajianModel->get_data('data_akademik')->result();
     $this->load->view('templates_admin/header', $data);
     $this->load->view('templates_admin/sidebar');
     $this->load->view('admin/Penempatan/tambahDatapenempatan', $data);
@@ -38,47 +44,45 @@ class Datapenempatan extends CI_Controller
 
   public function tambahDataAksi()
   {
-    $this->_rules();
+      $this->_rules();
 
-    if ($this->form_validation->run() == FALSE) {
-      $this->tambahData();
-    } else {
-      $id_pelajaran = $this->input->post('id_pelajaran');
-      $id_kelas = $this->input->post('id_kelas');
-      $tunjangan_penempatan = $this->input->post('tunjangan_penempatan');
-      $id_akademik = $this->input->post('id_akademik');
-      $nip = $this->input->post('nip');
-      $jam_mulai = $this->input->post('jam_mulai');
-      $jam_akhir = $this->input->post('jam_akhir');
-      $total_jam = $this->input->post('total_jam');
-      $keterangan = $this->input->post('keterangan');
+      if ($this->form_validation->run() == FALSE) {
+          $this->tambahData();
+      } else {
+          $data = array(
+              'id_pelajaran'   => $this->input->post('id_pelajaran'),
+              'id_kelas'       => $this->input->post('id_kelas'),
+              'id_akademik'    => $this->input->post('id_akademik'),
+              'nip'            => $this->input->post('nip'),
+              'hari'           => $this->input->post('hari'),
+              'jam_mulai'      => $this->input->post('jam_mulai'),
+              'jam_akhir'      => $this->input->post('jam_akhir'),
+              'total_jam'      => $this->input->post('total_jam'),
+              'keterangan'     => $this->input->post('keterangan')
+          );
 
-      $data = array(
-        'id_pelajaran' => $id_pelajaran,
-        'id_kelas' => $id_kelas,
-        'tunjangan_penempatan' => $tunjangan_penempatan,
-        'id_akademik' => $id_akademik,
-        'nip' => $nip,
-        'jam_mulai' => $jam_mulai,
-        'jam_akhir' => $jam_akhir,
-        'total_jam' => $total_jam,
-        'keterangan' => $keterangan,
-      );
+          $this->penggajianModel->insert_data($data, 'data_penempatan');
 
-      $this->penggajianModel->insert_data($data, 'data_penempatan');
-      $this->session->set_flashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
-        <strong>Data berhasil ditambahkan</strong>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>');
-      redirect('admin/datapenempatan');
-    }
+          $this->session->set_flashdata('pesan', 
+              '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                  <strong>Data berhasil ditambahkan</strong>
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>'
+          );
+
+          redirect('admin/dataPenempatan');
+      }
   }
 
   public function updateData($id)
   {
     // $where = array('id_penempatan' => $id);
+    $data['pelajaran'] = $this->penggajianModel->get_data('data_pelajaran')->result();
+    $data['kelas'] = $this->penggajianModel->get_data('data_kelas')->result();
+    $data['pegawai'] = $this->penggajianModel->get_data('data_pegawai')->result();
+    $data['akademik'] = $this->penggajianModel->get_data('data_akademik')->result();
     $data['penempatan'] = $this->db->query("SELECT * FROM data_penempatan WHERE id_penempatan = '$id'")->result();
     $data['title'] = "Update Data penempatan";
 
@@ -99,7 +103,6 @@ class Datapenempatan extends CI_Controller
       $id           = $this->input->post('id_penempatan');
       $id_pelajaran = $this->input->post('id_pelajaran');
       $id_kelas = $this->input->post('id_kelas');
-      $tunjangan_penempatan = $this->input->post('tunjangan_penempatan');
       $id_akademik = $this->input->post('id_akademik');
       $nip = $this->input->post('nip');
       $jam_mulai = $this->input->post('jam_mulai');
@@ -110,7 +113,6 @@ class Datapenempatan extends CI_Controller
       $data = array(
         'id_pelajaran' => $id_pelajaran,
         'id_kelas' => $id_kelas,
-        'tunjangan_penempatan' => $tunjangan_penempatan,
         'id_akademik' => $id_akademik,
         'nip' => $nip,
         'jam_mulai' => $jam_mulai,
@@ -149,7 +151,10 @@ class Datapenempatan extends CI_Controller
   public function printData()
   {
     $data['title'] = "Cetak Data Penempatan";
-    $data['penempatan'] = $this->penggajianModel->get_data('data_penempatan')->result();
+    $data['penempatan'] = $this->db->query("SELECT a.*, b.nama_pelajaran, c.nama_kelas, d.tahun_akademik FROM data_penempatan a
+                    JOIN data_pelajaran b ON a.id_pelajaran = b.id_pelajaran
+                    JOIN data_kelas c ON a.id_kelas = c.id_kelas
+                    JOIN data_akademik d ON a.id_akademik = d.id_akademik")->result();
     $this->load->view('templates_admin/header', $data);
     $this->load->view('admin/penempatan/cetakdatapenempatan');
   }
@@ -158,7 +163,6 @@ class Datapenempatan extends CI_Controller
   {
     $this->form_validation->set_rules('id_pelajaran', 'ID Pelajaran', 'required');
     $this->form_validation->set_rules('id_kelas', 'ID Kelas', 'required');
-    $this->form_validation->set_rules('tunjangan_penempatan', 'Tunjangan Penempatan', 'required');
     $this->form_validation->set_rules('id_akademik', 'ID Akademic', 'required');
     $this->form_validation->set_rules('nip', 'NIP', 'required');
     $this->form_validation->set_rules('jam_mulai', 'Jam Mulai', 'required');

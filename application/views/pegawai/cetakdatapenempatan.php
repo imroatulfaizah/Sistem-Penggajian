@@ -29,9 +29,9 @@
     <table class="table table-bordered table-striped">
         <tr>
             <th class="text-center">No</th>
-            <th class="text-center">ID Pelajaran</th>
-            <th class="text-center">ID Kelas</th>
-            <th class="text-center">ID Akademik</th>
+            <th class="text-center">Pelajaran</th>
+            <th class="text-center">Kelas</th>
+            <th class="text-center">Tahun Akademik</th>
             <th class="text-center">NIP</th>
             <th class="text-center">Jam Mulai</th>
             <th class="text-center">Jam Akhir</th>
@@ -43,9 +43,9 @@
         foreach ($penempatan as $g) : ?>
             <tr>
                 <td><?= $no++; ?></td>
-                <td><?= $g->id_pelajaran; ?></td>
-                <td><?= $g->id_kelas; ?></td>
-                <td><?= $g->id_akademik; ?></td>
+                <td><?= $g->nama_pelajaran; ?></td>
+                <td><?= $g->nama_kelas; ?></td>
+                <td><?= $g->tahun_akademik; ?></td>
                 <td><?= $g->nip; ?></td>
                 <td><?= $g->jam_mulai; ?></td>
                 <td><?= $g->jam_akhir; ?></td>

@@ -19,10 +19,16 @@ class DataPenempatan extends CI_Controller
   public function index()
   {
     $data['title'] = "Data Penempatan";
-    //$data['penempatan'] = $this->penggajianModel->get_data('data_penempatan')->result();
-    $data['penempatan'] = $this->db->query("SELECT a.*, SUM(total_jam) as total_jam, b.nama_pelajaran as nama_pelajaran, c.nama_kelas as nama_kelas FROM data_penempatan a
-    INNER JOIN data_pelajaran b on a.id_pelajaran = b.id_pelajaran
-    INNER JOIN data_kelas c ON a.id_kelas = c.id_kelas")->result();
+    $data['penempatan'] = $this->db->query("SELECT 
+      a.*,
+      SUM(a.total_jam) AS total_jam,
+      b.nama_pelajaran,
+      c.nama_kelas
+      FROM data_penempatan a
+      INNER JOIN data_pelajaran b ON a.id_pelajaran = b.id_pelajaran
+      INNER JOIN data_kelas c ON a.id_kelas = c.id_kelas
+      GROUP BY a.id_penempatan, a.id_pelajaran, a.id_kelas, a.id_akademik, a.nip, a.jam_mulai, a.jam_akhir, a.keterangan, b.nama_pelajaran, c.nama_kelas
+    ")->result();
     $this->load->view('templates_pegawai/header', $data);
     $this->load->view('templates_pegawai/sidebar');
     $this->load->view('pegawai/dataPenempatan', $data);
@@ -153,8 +159,10 @@ class DataPenempatan extends CI_Controller
   {
     $data['title'] = "Cetak Data Penempatan";
     $nip = $this->session->userdata('nip');
-    //$data['penempatan'] = $this->penggajianModel->get_data('data_penempatan')->result();
-    $data['penempatan'] = $this->db->query("SELECT * FROM data_penempatan WHERE nip = '$nip'")->result();
+    $data['penempatan'] = $this->db->query("SELECT a.*, b.nama_pelajaran, c.nama_kelas, d.tahun_akademik FROM data_penempatan a
+                    JOIN data_pelajaran b ON a.id_pelajaran = b.id_pelajaran
+                    JOIN data_kelas c ON a.id_kelas = c.id_kelas
+                    JOIN data_akademik d ON a.id_akademik = d.id_akademik WHERE nip = '$nip'")->result();
     $this->load->view('templates_pegawai/header', $data);
     $this->load->view('pegawai/cetakdatapenempatan');
   }

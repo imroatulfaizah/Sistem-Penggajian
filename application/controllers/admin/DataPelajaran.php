@@ -20,6 +20,7 @@ class DataPelajaran extends CI_Controller
   {
     $data['title'] = "Data Pelajaran";
     $data['pelajaran'] = $this->penggajianModel->get_data('data_pelajaran')->result();
+
     $this->load->view('templates_admin/header', $data);
     $this->load->view('templates_admin/sidebar');
     $this->load->view('admin/Pelajaran/dataPelajaran', $data);

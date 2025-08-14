@@ -40,7 +40,7 @@
         <td>
           <center>
             <a class="btn btn-sm btn-primary" href="<?= base_url('admin/dataPenempatan/updateData/' . $g->id_penempatan); ?>"><i class="fas fa-edit"></i></a>
-            <a class="btn btn-sm btn-primary" href="<?= base_url('admin/dataPenempatan/updateData/' . $g->id_penempatan); ?>"><i class="fas fa-info-circle"></i></a>
+            <!-- <a class="btn btn-sm btn-primary" href="('admin/dataPenempatan/updateData/' . $g->id_penempatan); ?>"><i class="fas fa-info-circle"></i></a> -->
             <a onclick="return confirm('Yakin hapus?')" class="btn btn-sm btn-danger" href="<?= base_url('admin/dataPenempatan/deleteData/' . $g->id_penempatan); ?>"><i class="fas fa-trash"></i></a>
           </center>
         </td>

@@ -4,7 +4,7 @@ function generate_daily_unique_code($datetime = null) {
     $now = $datetime ?? new DateTime('now', new DateTimeZone('Asia/Jakarta'));
 
     $hour = (int)$now->format('H');
-    $session = ($hour >= 8 && $hour < 17) ? 'pagi' : 'sore';
+    $session = ($hour >= 8 && $hour < 17 ) ? 'pagi' : 'sore';
     $date = $now->format('Y-m-d');
 
     $raw = $date . '-' . $session . '-' . $secret;

@@ -22,7 +22,7 @@ class DataPegawai extends CI_Controller
     $data['title'] = "Data Pegawai";
     //penggajianMode suatu model yang berisi  get_data data pegawai(database)
     //->resuly(); untuk mengatur query
-    $data['pegawai'] = $this->db->query("SELECT * FROM data_pegawai a JOIN data_jabatan b on a.jabatan = b.id_jabatan")->result();
+    $data['pegawai'] = $this->db->query("SELECT a.*, b.* FROM data_pegawai a JOIN data_jabatan b on a.jabatan = b.id_jabatan")->result();
     $this->load->view('templates_admin/header', $data);
     $this->load->view('templates_admin/sidebar');
     $this->load->view('admin/Pegawai/dataPegawai', $data);

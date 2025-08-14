@@ -13,7 +13,7 @@
             <div class="card-body">
                 <div class="row">
                     <!-- <div class=" col-md-5">
-                                <img style="width:30rem" src="<?= base_url('assets/photo/' . $p->photo); ?>" alt="">
+                                <img style="width:30rem" src="< base_url('assets/photo/' . $p->photo); ?>" alt="">
                         </div> -->
                     <div class="col-md-7">
                         <table class="table">
@@ -56,30 +56,6 @@
                                 <td>Alamat</td>
                                 <td>:</td>
                                 <td><?= $p->alamat; ?></td>
-                            </tr>
-                            <tr> 
-                                <div class="mapouter">
-                                        <div class="gmap_canvas"><iframe width="auto" height="auto" id="gmap_canvas" src="<?= $p->peta; ?>
-                                        " frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><a href="https://123movies-to.org"></a><br>
-                                            <style>
-                                                .mapouter {
-                                                    position: relative;
-                                                    text-align: right;
-                                                    height: 150px;
-                                                    width: 400px;
-                                                }
-                                            </style><a href="https://www.embedgooglemap.net">google maps embed iframe generator</a>
-                                            <style>
-                                                .gmap_canvas {
-                                                    overflow: hidden;
-                                                    background: none !important;
-                                                    height: 150px;
-                                                    width: 300px;
-                                                }
-                                            </style>
-                                        </div>
-                                    </div>
-                                </td>
                             </tr>
                             <a class="mb-2 mt-2 btn btn-sm btn-danger" href="<?= base_url('admin/dataPegawai'); ?>"><i class="fas fa-arrow-circle-left"></i> Kembali</a>
                         </table>

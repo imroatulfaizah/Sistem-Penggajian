@@ -66,33 +66,7 @@
                 <td>:</td>
                 <td><?= $p->alamat; ?></td>
               </tr>
-              <tr>
-                <td>Peta</td>
-                <td>:</td>
-                <td>
-                  <div class="mapouter">
-                    <div class="gmap_canvas"><iframe width="600" height="500" id="gmap_canvas" src="<?= $p->peta; ?>
-                                        " frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><a href="https://123movies-to.org"></a><br>
-                      <style>
-                        .mapouter {
-                          position: relative;
-                          text-align: right;
-                          height: 150px;
-                          width: 400px;
-                        }
-                      </style><a href="https://www.embedgooglemap.net">google maps embed iframe generator</a>
-                      <style>
-                        .gmap_canvas {
-                          overflow: hidden;
-                          background: none !important;
-                          height: 150px;
-                          width: 400px;
-                        }
-                      </style>
-                    </div>
-                  </div>
-                </td>
-              </tr>
+              
             </table>
           </div>
         </div>

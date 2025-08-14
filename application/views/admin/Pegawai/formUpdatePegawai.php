@@ -43,7 +43,7 @@
             <select name="jabatan" id="" class="form-control">
               <option value="<?= $p->jabatan; ?>"><?= $p->jabatan; ?></option>
               <?php foreach ($jabatan as $j) : ?>
-                <option value="<?= $j->nama_jabatan; ?>"><?= $j->nama_jabatan; ?></option>
+                <option value="<?= $j->id_jabatan; ?>"><?= $j->nama_jabatan; ?></option>
               <?php endforeach; ?>
             </select>
             <?= form_error('jabatan', '<div class="text-small text-danger">', '</div>') ?>

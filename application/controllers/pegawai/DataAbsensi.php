@@ -55,8 +55,8 @@ class DataAbsensi extends CI_Controller
           redirect('pegawai/dataAbsensi');
       }
 
-      $lat_school = -6.2357504;
-      $lon_school = 106.8269568;
+      $lat_school = -7.8439064;
+      $lon_school = 112.6816812;
       $radius = 100; 
       $theta = $lon - $lon_school;
       $dist = sin(deg2rad($lat)) * sin(deg2rad($lat_school)) +
@@ -150,8 +150,8 @@ class DataAbsensi extends CI_Controller
           redirect('pegawai/dataAbsensi');
       }
 
-      $lat_school = -6.2357504;
-      $lon_school = 106.8269568;
+      $lat_school = -7.8292181;
+      $lon_school = 112.69548442;
       $radius = 100; 
       $theta = $lon - $lon_school;
       $dist = sin(deg2rad($lat)) * sin(deg2rad($lat_school)) +
@@ -230,8 +230,8 @@ class DataAbsensi extends CI_Controller
       $lat = $this->input->post('lat');
       $lon = $this->input->post('lon');
 
-      $lat_school = -6.2357504;
-      $lon_school = 106.8269568;
+      $lat_school = -7.749632;
+      $lon_school = 112.7841792;
       $radius = 100; // meter
 
       $theta = $lon - $lon_school;
@@ -279,8 +279,8 @@ class DataAbsensi extends CI_Controller
       $lat = $this->input->post('lat');
       $lon = $this->input->post('lon');
 
-      $lat_school = -6.2357504;
-      $lon_school = 106.8269568;
+      $lat_school = -7.749632;
+      $lon_school = 112.7841792;
       $radius = 100;
 
       $theta = $lon - $lon_school;
@@ -326,7 +326,9 @@ class DataAbsensi extends CI_Controller
           $clockout = new DateTime(); 
           $interval = $clockin->diff($clockout);
           $total_jam = $interval->h + ($interval->i / 60); 
-
+          // var_dump($clockin);
+          // var_dump($clockout); 
+          // die();
 
           $this->db->set('jam_clockout', $clockout->format('Y-m-d H:i:s'));
           $this->db->set('lokasi_clockout', $lat . ',' . $lon);

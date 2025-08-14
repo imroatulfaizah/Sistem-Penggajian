@@ -13,10 +13,10 @@
       <form action="<?= base_url('bendahara/datainsentif/updateDataAksi') ?>" method="post">
 
         <div class="form-group">
-          <label for="">ID Pegawai</label>
+          <label for="">NIP</label>
           <input type="hidden" name="id_insentif" value="<?= $j->id_insentif; ?>">
-          <input type="text" name="id_pegawai" class="form-control" value="<?= $j->id_pegawai; ?>">
-          <?= form_error('id_pegawai', '<div class="text-small text-danger">', '</div>') ?>
+          <input type="text" name="nip" class="form-control" value="<?= $j->nip; ?>">
+          <?= form_error('nip', '<div class="text-small text-danger">', '</div>') ?>
         </div>
         <div class="form-group">
           <label for="">Nama Insentif</label>
@@ -29,11 +29,13 @@
           <?= form_error('nominal', '<div class="text-small text-danger">', '</div>') ?>
         </div>
         <div class="form-group">
-          <label for="">Status Pembayaran</label>
-          <input type="text" name="is_paid" class="form-control" value="<?= $j->is_paid; ?>">
-          <?= form_error('is_paid', '<div class="text-small text-danger">', '</div>') ?>
+            <label for="">Status Pembayaran</label>
+            <select name="is_paid" class="form-control">
+                <option value="1" <?= $j->is_paid == 1 ? 'selected' : '' ?>>Lunas</option>
+                <option value="0" <?= $j->is_paid == 0 ? 'selected' : '' ?>>Belum Lunas</option>
+            </select>
+            <?= form_error('is_paid', '<div class="text-small text-danger">', '</div>') ?>
         </div>
-
         <button type="submit" class="btn btn-success">Update</button>
 
       </form>

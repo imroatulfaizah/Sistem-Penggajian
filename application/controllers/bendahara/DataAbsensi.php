@@ -31,7 +31,7 @@ class DataAbsensi extends CI_Controller
       $bulanTahun = $bulan . $tahun;
     }
 
-    $data['absensi'] = $this->db->query("SELECT data_kehadiran.*, data_pegawai.nama_pegawai, data_pegawai.jenis_kelamin, data_pegawai.jabatan FROM data_kehadiran INNER JOIN data_pegawai ON data_kehadiran.nip = data_pegawai.nip INNER JOIN data_jabatan ON data_pegawai.jabatan = data_jabatan.nama_jabatan WHERE data_kehadiran.bulan = '$bulanTahun' ORDER BY data_pegawai.nama_pegawai ASC")->result();
+    $data['absensi'] = $this->db->query("SELECT data_kehadiran.*, data_pegawai.nama_pegawai, data_pegawai.jenis_kelamin, data_pegawai.jabatan FROM data_kehadiran INNER JOIN data_pegawai ON data_kehadiran.nip = data_pegawai.nip INNER JOIN data_jabatan ON data_pegawai.jabatan = data_jabatan.id_jabatan WHERE data_kehadiran.bulan = '$bulanTahun' ORDER BY data_pegawai.nama_pegawai ASC")->result();
 
     $this->load->view('templates_bendahara/header', $data);
     $this->load->view('templates_bendahara/sidebar');

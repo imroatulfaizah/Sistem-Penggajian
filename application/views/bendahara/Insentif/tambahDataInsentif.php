@@ -11,9 +11,9 @@
       <form action="<?= base_url('bendahara/dataInsentif/tambahDataAksi') ?>" method="post">
 
         <div class="form-group">
-          <label for="">ID Pegawai</label>
-          <input type="text" name="id_pegawai" class="form-control">
-          <?= form_error('id_pegawai', '<div class="text-small text-danger">', '</div>') ?>
+          <label for="">NIP</label>
+          <input type="text" name="nip" class="form-control">
+          <?= form_error('nip', '<div class="text-small text-danger">', '</div>') ?>
         </div>
         <div class="form-group">
           <label for="">Nama Insentif</label>
@@ -27,7 +27,11 @@
         </div>
         <div class="form-group">
           <label for="">Status Pembayaran</label>
-          <input type="text" name="is_paid" class="form-control">
+          <select name="is_paid" id="" class="form-control">
+            <option value="">--Pilih Status--</option>
+            <option value="1">Lunas</option>
+            <option value="0">Belum Lunas</option>
+          </select>
           <?= form_error('is_paid', '<div class="text-small text-danger">', '</div>') ?>
         </div>
 

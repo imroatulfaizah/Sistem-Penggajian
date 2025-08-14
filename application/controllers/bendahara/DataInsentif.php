@@ -43,13 +43,13 @@ class DataInsentif extends CI_Controller
     if ($this->form_validation->run() == FALSE) {
       $this->tambahData();
     } else {
-      $id_pegawai = $this->input->post('id_pegawai');
+      $nip = $this->input->post('nip');
       $nama_insentif = $this->input->post('nama_insentif');
       $nominal = $this->input->post('nominal');
       $is_paid = $this->input->post('is_paid');
 
       $data = array(
-        'id_pegawai' => $id_pegawai,
+        'nip' => $nip,
         'nama_insentif' => $nama_insentif,
         'nominal' => $nominal,
         'is_paid' => $is_paid,
@@ -87,13 +87,13 @@ class DataInsentif extends CI_Controller
       $this->updateData($id);
     } else {
       $id           = $this->input->post('id_insentif');
-      $id_pegawai   = $this->input->post('id_pegawai');
+      $nip   = $this->input->post('nip');
       $nama_insentif = $this->input->post('nama_insentif');  
       $nominal = $this->input->post('nominal');
       $is_paid   = $this->input->post('is_paid');
 
       $data = array(
-        'id_pegawai' => $id_pegawai,
+        'nip' => $nip,
         'nama_insentif'   => $nama_insentif,
         'nominal' => $nominal,
         'is_paid'   => $is_paid,
@@ -136,7 +136,7 @@ class DataInsentif extends CI_Controller
 
   public function _rules()
   {
-    $this->form_validation->set_rules('id_pegawai', 'ID Pegawai', 'required');
+    $this->form_validation->set_rules('nip', 'NIP', 'required');
     $this->form_validation->set_rules('nama_insentif', 'Nama Insentif', 'required');
     $this->form_validation->set_rules('nominal', 'Nominal Tunjangan', 'required');
     $this->form_validation->set_rules('is_paid', 'Is Paid', 'required');

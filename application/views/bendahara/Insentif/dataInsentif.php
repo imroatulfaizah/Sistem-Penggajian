@@ -25,7 +25,7 @@
     foreach ($insentif as $j) : ?>
       <tr>
         <td><?= $no++; ?></td>
-        <td><?= $j->id_pegawai; ?></td>
+        <td><?= $j->nip; ?></td>
         <td><?= $j->nama_insentif; ?></td>
         <td>Rp. <?= number_format($j->nominal, 0, ',', '.'); ?>,-</td>
         <td>

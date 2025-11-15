@@ -98,6 +98,7 @@ public function do_attend()
         $this->db->update('data_kehadiran');
 
         $data = [
+            'nip'             => $nip,
             'bulan'           => $bulan,
             'jam_clockin'     => date('Y-m-d H:i:s'),
             'jam_clockout'    => NULL,

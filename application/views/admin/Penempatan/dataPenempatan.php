@@ -14,122 +14,42 @@
   </a>
 
   <?= $this->session->flashdata('pesan'); ?>
+  
+  <table class="table table-bordered table-stiped mt-2">
+    <tr>
+        <th class="text-center">No</th>
+        <th class="text-center">Nama Pelajaran</th>
+        <th class="text-center">Kelas</th>
+        <th class="text-center">Tahun Akademik</th>
+        <th class="text-center">NIP</th>
+        <th class="text-center">Jam Mulai</th>
+        <th class="text-center">Jam Akhir</th>
+        <th class="text-center">Total Jam</th>
+        <th class="text-center">Keterangan</th>
+        <th class="text-center">Action</th>
+    </tr>
 
-
-  <?php
-  // List kelas unik
-  $kelasList = [];
-  foreach ($penempatan as $p) {
-      if (!in_array($p->nama_kelas, $kelasList)) {
-          $kelasList[] = $p->nama_kelas;
-      }
-  }
-  sort($kelasList);
-
-  // List hari unik
-  $hariList = [];
-  foreach ($penempatan as $p) {
-      if (!in_array($p->hari, $hariList)) {
-          $hariList[] = $p->hari;
-      }
-  }
-  ?>
-
-  <?php foreach ($hariList as $hari): ?>
-
-      <h4 class="mt-4 mb-2 font-weight-bold text-primary"><?= strtoupper($hari); ?></h4>
-
-      <div style="overflow-x:auto; white-space: nowrap;">
-      <table class="table table-bordered table-striped">
-          <thead class="text-center">
-              <tr>
-                  <th>HARI</th>
-                  <th>JAM</th>
-                  <th>WAKTU</th>
-                  <?php foreach ($kelasList as $k): ?>
-                      <th><?= $k; ?></th>
-                  <?php endforeach; ?>
-              </tr>
-          </thead>
-
-          <tbody>
-
-          <?php
-          // Filter data hari tertentu
-          $dataHari = array_filter($penempatan, fn($x) => $x->hari == $hari);
-
-          // Group by jam_mulai + jam_akhir
-          $grouped = [];
-          foreach ($dataHari as $row) {
-              $key = $row->jam_mulai . "_" . $row->jam_akhir;
-              if (!isset($grouped[$key])) {
-                  $grouped[$key] = [];
-              }
-              $grouped[$key][] = $row;
-          }
-
-          $jamKe = 0;
-          ?>
-
-          <?php foreach ($grouped as $key => $items): ?>
-
-              <?php
-              // Ambil jam dan waktu
-              $first = $items[0];
-              $waktu = date("H.i", strtotime($first->jam_mulai)) . " - " . date("H.i", strtotime($first->jam_akhir));
-
-              // Siapkan mapping kelas → mapel
-              $isiKelas = [];
-              foreach ($kelasList as $k) $isiKelas[$k] = "";
-
-              foreach ($items as $d) {
-                  $isiKelas[$d->nama_kelas] = $d->nama_pelajaran . "<br>(" . $d->nama_pegawai . ")";
-              }
-              ?>
-
-              <!-- ===== SHOLAT DHUHA ===== -->
-              <?php if ($jamKe == 5): ?>
-                  <tr>
-                      <td class="text-center"><?= $hari ?></td>
-                      <td class="text-center">5</td>
-                      <td class="text-center">09.30 - 10.00</td>
-                      <td colspan="<?= count($kelasList); ?>" class="text-center font-weight-bold text-success">
-                          SHOLAT DHUHA / ISTIRAHAT
-                      </td>
-                  </tr>
-              <?php endif; ?>
-
-              <!-- ===== ROW UTAMA ===== -->
-              <tr>
-                  <td class="text-center"><?= $hari ?></td>
-                  <td class="text-center"><?= $jamKe ?></td>
-                  <td class="text-center"><?= $waktu ?></td>
-
-                  <?php foreach ($kelasList as $k): ?>
-                      <td class="text-center"><?= $isiKelas[$k] ?></td>
-                  <?php endforeach; ?>
-              </tr>
-
-              <!-- ===== ISTIRAHAT DZUHUR ===== -->
-              <?php if ($jamKe == 10): ?>
-                  <tr>
-                      <td class="text-center"><?= $hari ?></td>
-                      <td class="text-center">10</td>
-                      <td class="text-center">12.30 - 13.00</td>
-                      <td colspan="<?= count($kelasList); ?>" class="text-center font-weight-bold text-primary">
-                          SHOLAT DZUHUR BERJAMAAH
-                      </td>
-                  </tr>
-              <?php endif; ?>
-
-              <?php $jamKe++; ?>
-
-          <?php endforeach; ?>
-
-          </tbody>
-      </table>
-      </div>
-
-  <?php endforeach; ?>
-
+    <?php
+    $no = 1;
+    foreach ($penempatan as $g) : ?>
+      <tr>
+        <td><?= $no++; ?></td>
+        <td><?= $g->nama_pelajaran; ?></td>
+        <td><?= $g->nama_kelas; ?></td>
+        <td><?= $g->tahun_akademik; ?></td>
+        <td><?= $g->nip; ?></td>
+        <td><?= $g->jam_mulai; ?></td>
+        <td><?= $g->jam_akhir; ?></td>
+        <td><?= $g->total_jam; ?></td>
+        <td><?= $g->keterangan; ?></td>
+        <td>
+          <center>
+            <a class="btn btn-sm btn-primary" href="<?= base_url('admin/dataPenempatan/updateData/' . $g->id_penempatan); ?>"><i class="fas fa-edit"></i></a>
+            <!-- <a class="btn btn-sm btn-primary" href="('admin/dataPenempatan/updateData/' . $g->id_penempatan); ?>"><i class="fas fa-info-circle"></i></a> -->
+            <a onclick="return confirm('Yakin hapus?')" class="btn btn-sm btn-danger" href="<?= base_url('admin/dataPenempatan/deleteData/' . $g->id_penempatan); ?>"><i class="fas fa-trash"></i></a>
+          </center>
+        </td>
+      </tr>
+    <?php endforeach; ?>
+  </table>
 </div>

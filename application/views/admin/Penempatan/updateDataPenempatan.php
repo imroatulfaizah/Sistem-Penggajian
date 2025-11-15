@@ -108,9 +108,17 @@
 
   <!-- Total Jam -->
   <div class="form-group">
-    <label for="">Total Jam</label>
-    <input type="number" name="total_jam" class="form-control" value="<?= $j->total_jam; ?>">
-    <?= form_error('total_jam', '<div class="text-small text-danger">', '</div>') ?>
+      <label for="">Total Jam</label>
+      <input 
+          type="number" 
+          name="total_jam" 
+          class="form-control" 
+          step="0.5" 
+          min="0.5" 
+          max="12"
+          value="<?= $j->total_jam; ?>"
+      >
+      <?= form_error('total_jam', '<div class="text-small text-danger">', '</div>') ?>
   </div>
 
   <!-- Keterangan -->

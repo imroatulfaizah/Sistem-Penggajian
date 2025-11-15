@@ -19,6 +19,7 @@ class DataPenempatan extends CI_Controller
   public function index()
   {
     $data['title'] = "Data Penempatan";
+    $nip = $this->session->userdata('nip');
     $data['penempatan'] = $this->db->query("SELECT 
       a.*,
       SUM(a.total_jam) AS total_jam,
@@ -27,6 +28,7 @@ class DataPenempatan extends CI_Controller
       FROM data_penempatan a
       INNER JOIN data_pelajaran b ON a.id_pelajaran = b.id_pelajaran
       INNER JOIN data_kelas c ON a.id_kelas = c.id_kelas
+      WHERE a.nip = $nip
       GROUP BY a.id_penempatan, a.id_pelajaran, a.id_kelas, a.id_akademik, a.nip, a.jam_mulai, a.jam_akhir, a.keterangan, b.nama_pelajaran, c.nama_kelas
     ")->result();
     $this->load->view('templates_pegawai/header', $data);

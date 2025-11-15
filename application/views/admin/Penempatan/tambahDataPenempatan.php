@@ -98,9 +98,9 @@
 
         <!-- total_jam -->
         <div class="form-group">
-          <label for="">Total Jam</label>
-          <input type="number" name="total_jam" class="form-control">
-          <?= form_error('total_jam', '<div class="text-small text-danger">', '</div>') ?>
+            <label for="">Total Jam</label>
+            <input type="number" name="total_jam" class="form-control" step="0.5" min="1" max="12">
+            <?= form_error('total_jam', '<div class="text-small text-danger">', '</div>') ?>
         </div>
 
         <!-- keterangan -->

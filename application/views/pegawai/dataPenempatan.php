@@ -6,23 +6,47 @@
     <h1 class="h3 mb-0 text-gray-800"><?= $title; ?></h1>
   </div>
 
-  <!-- <a class="btn btn-sm btn-success mb-3" href="< base_url('pegawai/dataPenempatan/tambahData/'); ?>"><i class="fas fa-clock"></i> Tambah Data</a> -->
-  <a class="btn btn-sm btn-danger mb-3" target="blank" href="<?= base_url('pegawai/dataPenempatan/printData/'); ?>"><i class="fas fa-print"></i> Print Data</a>
+  <a class="btn btn-sm btn-danger mb-3" target="blank" href="<?= base_url('pegawai/dataPenempatan/printData/'); ?>">
+    <i class="fas fa-print"></i> Print Data
+  </a>
+
   <?= $this->session->flashdata('pesan'); ?>
+
+  <!-- FILTER PER HARI -->
+  <form method="get" action="">
+    <div class="row mb-3">
+      <div class="col-md-3">
+        <select name="hari" class="form-control">
+          <option value="">-- Filter Hari --</option>
+          <option value="Senin"   <?= ($this->input->get('hari') == 'Senin') ? 'selected' : ''; ?>>Senin</option>
+          <option value="Selasa"  <?= ($this->input->get('hari') == 'Selasa') ? 'selected' : ''; ?>>Selasa</option>
+          <option value="Rabu"    <?= ($this->input->get('hari') == 'Rabu') ? 'selected' : ''; ?>>Rabu</option>
+          <option value="Kamis"   <?= ($this->input->get('hari') == 'Kamis') ? 'selected' : ''; ?>>Kamis</option>
+          <option value="Jumat"   <?= ($this->input->get('hari') == 'Jumat') ? 'selected' : ''; ?>>Jumat</option>
+          <option value="Sabtu"   <?= ($this->input->get('hari') == 'Sabtu') ? 'selected' : ''; ?>>Sabtu</option>
+          <option value="Minggu"  <?= ($this->input->get('hari') == 'Minggu') ? 'selected' : ''; ?>>Minggu</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-primary" type="submit">Filter</button>
+        <a href="<?= base_url('pegawai/dataPenempatan'); ?>" class="btn btn-secondary">Reset</a>
+      </div>
+    </div>
+  </form>
 
   <table class="table table-bordered table-stiped mt-2">
     <tr>
-        <th class="text-center">No</th>
-        <th class="text-center">Pelajaran</th>
-        <th class="text-center">Kelas</th>
-        <th class="text-center">Akademik</th>
-        <th class="text-center">NIP</th>
-        <th class="text-center">Hari</th>
-        <th class="text-center">Jam Mulai</th>
-        <th class="text-center">Jam Akhir</th>
-        <th class="text-center">Total Jam</th>
-        <th class="text-center">Keterangan</th>
-        <th class="text-center">Action</th>
+      <th class="text-center">No</th>
+      <th class="text-center">Pelajaran</th>
+      <th class="text-center">Kelas</th>
+      <th class="text-center">Akademik</th>
+      <th class="text-center">NIP</th>
+      <th class="text-center">Hari</th>
+      <th class="text-center">Jam Mulai</th>
+      <th class="text-center">Jam Akhir</th>
+      <th class="text-center">Total Jam</th>
+      <th class="text-center">Keterangan</th>
+      <th class="text-center">Action</th>
     </tr>
 
     <?php
@@ -43,12 +67,22 @@
 
     $hari_sekarang = $nama_hari_map[$hari_ini] ?? $hari_ini;
 
+    // Ambil filter GET
+    $filterHari = $this->input->get('hari') ?? '';
+
     foreach ($penempatan as $g) :
+
+      // Filter hari jika dipilih
+      if ($filterHari && $g->hari != $filterHari) {
+        continue;
+      }
+
       $isAktif = (
         $hari_sekarang == $g->hari &&
         $jam_sekarang >= $g->jam_mulai &&
         $jam_sekarang <= $g->jam_akhir
       );
+
       $disabled = $isAktif ? '' : 'disabled';
     ?>
       <tr>

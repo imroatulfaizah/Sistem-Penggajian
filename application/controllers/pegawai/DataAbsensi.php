@@ -33,196 +33,178 @@ class DataAbsensi extends CI_Controller
       $this->load->view('templates_pegawai/footer');
   }
 
+public function do_attend() 
+{
+    $this->load->helper('qr');
+    $nip = $this->session->userdata('nip');
+    $lat = $this->input->post('lat');
+    $lon = $this->input->post('lon');
+    $scanned_code = $this->input->post('qr_data');
+
+    $now = new DateTime('now', new DateTimeZone('Asia/Jakarta'));
+    $today = $now->format('Ymd');
+    $current_code = generate_daily_unique_code($now);
+
+    // Parse QR
+    $parts = explode('-', $scanned_code);
+    if (count($parts) < 3) {
+        return $this->invalid_qr();
+    }
+
+    $type = $parts[0];          // IN
+    $date = $parts[1];          // 20251115
+    $random = $parts[2];        // ABCD12
+
+    // VALIDASI: QR harus IN
+    if ($type !== "IN") {
+        return $this->invalid_qr();
+    }
+
+    // VALIDASI: QR hanya berlaku hari ini
+    if ($date !== $today) {
+        return $this->invalid_qr();
+    }
+
+    // VALIDASI: Random harus sama
+    if ($scanned_code !== ("IN-" . $current_code)) {
+        return $this->invalid_qr();
+    }
+
+    // VALIDASI LOKASI (sama seperti sebelumnya)
+    $lat_school = -7.8439064;
+    $lon_school = 112.6816812;
+    $radius = 100; 
+    $meters = $this->distance_meter($lat, $lon, $lat_school, $lon_school);
+
+    if ($meters > $radius) {
+        $this->session->set_flashdata('pesan', '<div class="alert alert-danger">Anda berada di luar area sekolah!</div>');
+        redirect('pegawai/dataAbsensi');
+    }
+
+    // ==== PROSES ABSEN (SAMA) ====
+
+    $bulan = date('mY'); 
+    $cek = $this->db->get_where('data_kehadiran', ['nip' => $nip, 'bulan' => $bulan])->row();
+
+    if ($cek) {
+        // Update hadir + tambah detail masuk
+        $this->db->set('hadir', 'hadir+1', FALSE);
+        $this->db->where('id_kehadiran', $cek->id_kehadiran);
+        $this->db->update('data_kehadiran');
+
+        $data = [
+            'bulan'           => $bulan,
+            'jam_clockin'     => date('Y-m-d H:i:s'),
+            'jam_clockout'    => '',
+            'lokasi_clockin'  => $lat . ',' . $lon,
+            'lokasi_clockout' => '',
+            'total_jam'       => 0,
+        ];
+
+        $this->penggajianModel->insert_data($data, 'detail_kehadiran');
+
+        $this->session->set_flashdata('pesan', '<div class="alert alert-success">Clock-in berhasil!</div>');
+        redirect('pegawai/dataAbsensi');
+    }
+
+    // input baru
+    $pegawai = $this->db->get_where('data_pegawai', ['nip' => $nip])->row();
+    $data = [
+        'bulan'         => $bulan,
+        'nip'           => $nip,
+        'nama_pegawai'  => $pegawai->nama_pegawai,
+        'jenis_kelamin' => $pegawai->jenis_kelamin,
+        'nama_jabatan'  => $pegawai->jabatan,
+        'hadir'         => 1,
+        'sakit'         => 0,
+        'izin'          => 0,
+        'alpha'         => 0
+    ];
+    $this->db->insert('data_kehadiran', $data);
+
+    $this->session->set_flashdata('pesan', '<div class="alert alert-success">Clock-in berhasil!</div>');
+    redirect('pegawai/dataAbsensi');
+}
+
+
   // Guru klik "Attend" → validasi GPS → simpan
-  public function do_attend() 
-  {
-      $this->load->helper('qr');
-      $nip = $this->session->userdata('nip');
-      $lat = $this->input->post('lat');
-      $lon = $this->input->post('lon');
-      $scanned_code = $this->input->post('qr_data');
+public function do_attend_out() 
+{
+    $this->load->helper('qr');
+    $nip = $this->session->userdata('nip');
+    $lat = $this->input->post('lat');
+    $lon = $this->input->post('lon');
+    $scanned_code = $this->input->post('qr_data');
 
-      $now = new DateTime('now', new DateTimeZone('Asia/Jakarta'));
-      $current_code = generate_daily_unique_code($now);
+    $now = new DateTime('now', new DateTimeZone('Asia/Jakarta'));
+    $today = $now->format('Ymd');
+    $current_code = generate_daily_unique_code($now);
 
-      if ($scanned_code !== $current_code) {
-          $this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-              <strong>Kode QR tidak valid atau sudah kadaluarsa!</strong>
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-              </button>
-          </div>');
-          redirect('pegawai/dataAbsensi');
-      }
+    // Parse QR
+    $parts = explode('-', $scanned_code);
+    if (count($parts) < 3) {
+        return $this->invalid_qr();
+    }
 
-      $lat_school = -7.8439064;
-      $lon_school = 112.6816812;
-      $radius = 100; 
-      $theta = $lon - $lon_school;
-      $dist = sin(deg2rad($lat)) * sin(deg2rad($lat_school)) +
-              cos(deg2rad($lat)) * cos(deg2rad($lat_school)) * cos(deg2rad($theta));
-      $dist = acos($dist);
-      $dist = rad2deg($dist);
-      $km = $dist * 60 * 1.1515 * 1.609344;
-      $meters = $km * 1000;
+    $type = $parts[0];  
+    $date = $parts[1];
+    $random = $parts[2];
 
-      if ($meters > $radius) {
-          $this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <strong>Anda berada diluar area sekolah!</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>');
-          redirect('pegawai/dataAbsensi');
-      }
+    // VALIDASI 1: QR harus OUT
+    if ($type !== "OUT") {
+        return $this->invalid_qr();
+    }
 
-      $bulan = date('mY'); 
-      $cek = $this->db->get_where('data_kehadiran', ['nip' => $nip, 'bulan' => $bulan])->row();
+    // VALIDASI 2: QR hanya berlaku hari ini
+    if ($date !== $today) {
+        return $this->invalid_qr();
+    }
 
-      if ($cek) {
-          $this->db->set('hadir', 'hadir+1', FALSE);
-          $this->db->where('id_kehadiran', $cek->id_kehadiran);
-          $this->db->update('data_kehadiran');
+    // VALIDASI 3: Random harus cocok
+    if ($scanned_code !== ("OUT-" . $current_code)) {
+        return $this->invalid_qr();
+    }
 
-          $data = [
-              'bulan'    => $bulan,
-              'jam_clockin'      => date('Y-m-d H:i:s'),
-              'jam_clockout'     => '',
-              'lokasi_clockin'   => $lat . ',' . $lon,
-              'lokasi_clockout'  => '',
-              'total_jam'        => 0,
-          ];
+    // VALIDASI 4: lokasi
+    $lat_school = -7.8439064;
+    $lon_school = 112.6816812;
+    $radius = 100;
+    $meters = $this->distance_meter($lat, $lon, $lat_school, $lon_school);
 
-          $this->penggajianModel->insert_data($data, 'detail_kehadiran');
+    if ($meters > $radius) {
+        $this->session->set_flashdata('pesan', '<div class="alert alert-danger">Anda berada di luar area sekolah!</div>');
+        redirect('pegawai/dataAbsensi');
+    }
 
-          $this->session->set_flashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>Anda telah berhasil absen</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-          </div>');
-          redirect('pegawai/dataAbsensi');
-      } else {
-          $pegawai = $this->db->get_where('data_pegawai', ['nip' => $nip])->row();
-          $data = [
-              'bulan'         => $bulan,
-              'nip'           => $nip,
-              'nama_pegawai'  => $pegawai->nama_pegawai,
-              'jenis_kelamin' => $pegawai->jenis_kelamin,
-              'nama_jabatan'  => $pegawai->jabatan,
-              'hadir'         => 1,
-              'sakit'         => 0,
-              'izin'          => 0,
-              'alpha'         => 0
-          ];
-          $this->db->insert('data_kehadiran', $data);
-          var_dump($data);
-          die();
-          $this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <strong>Anda telah berhasil absen!</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-          </div>');
-          redirect('pegawai/dataAbsensi');
-      }
-  }
+    // VALIDASI 5: Harus sudah IN sebelumnya
+    $bulan = date('mY');
+    $cek = $this->db
+          ->where('nip', $nip)
+          ->where('DATE(jam_clockin)', date('Y-m-d'))
+          ->get('detail_kehadiran')
+          ->row();
 
-  public function do_attend_out() 
-  {
-      $this->load->helper('qr');
-      date_default_timezone_set('Asia/Jakarta');
-      $nip = $this->session->userdata('nip');
-      $lat = $this->input->post('lat');
-      $lon = $this->input->post('lon');
-      $scanned_code = $this->input->post('qr_data');
+    if (!$cek) {
+        return $this->invalid_qr("Anda belum melakukan clock-in!");
+    }
 
-      $now = new DateTime('now', new DateTimeZone('Asia/Jakarta'));
-      $current_code = generate_daily_unique_code($now);
+    // Hitung lama kerja
+    $clockin = new DateTime($cek->jam_clockin);
+    $clockout = new DateTime();
+    $interval = $clockin->diff($clockout);
+    $total_jam = $interval->h + ($interval->i / 60);
 
-      if ($scanned_code !== $current_code) {
-          $this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-              <strong>Kode QR tidak valid atau sudah kadaluarsa!</strong>
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-              </button>
-          </div>');
-          redirect('pegawai/dataAbsensi');
-      }
+    // update
+    $this->db->set('jam_clockout', $clockout->format('Y-m-d H:i:s'));
+    $this->db->set('lokasi_clockout', $lat . ',' . $lon);
+    $this->db->set('total_jam', $total_jam);
+    $this->db->where('id', $cek->id);
+    $this->db->update('detail_kehadiran');
 
-      $lat_school = -7.8292181;
-      $lon_school = 112.69548442;
-      $radius = 100; 
-      $theta = $lon - $lon_school;
-      $dist = sin(deg2rad($lat)) * sin(deg2rad($lat_school)) +
-              cos(deg2rad($lat)) * cos(deg2rad($lat_school)) * cos(deg2rad($theta));
-      $dist = acos($dist);
-      $dist = rad2deg($dist);
-      $km = $dist * 60 * 1.1515 * 1.609344;
-      $meters = $km * 1000;
+    $this->session->set_flashdata('pesan', '<div class="alert alert-success">Clock-out berhasil!</div>');
+    redirect('pegawai/dataAbsensi');
+}
 
-      if ($meters > $radius) {
-          $this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <strong>Anda berada diluar area sekolah!</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>');
-          redirect('pegawai/dataAbsensi');
-      }
-
-      $bulan = date('mY'); 
-      $cek = $this->db
-            ->where('nip', $nip)
-            ->where('DATE(jam_clockin)', date('Y-m-d'))
-            ->get('detail_kehadiran')
-            ->row();
-
-      if ($cek) {
-          $clockin = new DateTime($cek->jam_clockin);
-          $clockout = new DateTime(); 
-          $interval = $clockin->diff($clockout);
-          $total_jam = $interval->h + ($interval->i / 60); 
-
-          $this->db->set('jam_clockout', $clockout->format('Y-m-d H:i:s'));
-          $this->db->set('lokasi_clockout', $lat . ',' . $lon);
-          $this->db->set('total_jam', $total_jam);
-          $this->db->where('nip', $nip);
-          $this->db->where('DATE(jam_clockin)', date('Y-m-d'));
-          $this->db->update('detail_kehadiran');
-
-          $this->session->set_flashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>Anda telah berhasil absen</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-          </div>');
-          redirect('pegawai/dataAbsensi');
-      } else {
-          $pegawai = $this->db->get_where('data_pegawai', ['nip' => $nip])->row();
-          $data = [
-              'bulan'         => $bulan,
-              'nip'           => $nip,
-              'nama_pegawai'  => $pegawai->nama_pegawai,
-              'jenis_kelamin' => $pegawai->jenis_kelamin,
-              'nama_jabatan'  => $pegawai->jabatan,
-              'hadir'         => 1,
-              'sakit'         => 0,
-              'izin'          => 0,
-              'alpha'         => 0
-          ];
-          $this->db->insert('data_kehadiran', $data);
-          var_dump($data);
-          die();
-          $this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <strong>Anda telah berhasil absen!</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-          </div>');
-          redirect('pegawai/dataAbsensi');
-      }
-  }
 
   public function clockIn($id_penempatan) 
   {

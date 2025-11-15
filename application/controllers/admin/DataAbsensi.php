@@ -229,49 +229,110 @@ class DataAbsensi extends CI_Controller
     $this->form_validation->set_rules('alpha', 'Alpha', 'required');
   }
 
-  public function generate_qr()
-  {
-      $this->load->helper('qr');
-      $this->load->library('ciqrcode');
+public function generate_qr()
+{
+    $this->load->helper('qr');
+    $this->load->library('ciqrcode');
 
-      $now = new DateTime('now', new DateTimeZone('Asia/Jakarta'));
-      $code = generate_daily_unique_code($now);
-      $filename = 'qr/' . $code . '.png';
+    // Waktu sekarang
+    $now = new DateTime('now', new DateTimeZone('Asia/Jakarta'));
 
-      // Generate QR jika belum ada
-      if (!file_exists(FCPATH . $filename)) {
-          $params['data'] = $code;
-          $params['level'] = 'H';
-          $params['size'] = 10;
-          $params['savename'] = FCPATH . $filename;
-          $this->ciqrcode->generate($params);
-      }
+    // Tentukan tipe otomatis
+    $hour = (int)$now->format('H');
+    $type = ($hour >= 17) ? 'OUT' : 'IN';  // otomatis IN sebelum 17:00, OUT setelahnya
 
-      // Tentukan sesi dan waktu berikutnya
-      $hour = (int)$now->format('H');
-      if ($hour < 8) {
-          $session_label = 'Pagi';
-          $next_shift_time = '08:00';
-      } elseif ($hour < 17) {
-          $session_label = 'Pagi';
-          $next_shift_time = '17:00';
-      } else {
-          $session_label = 'Sore';
-          $next_shift_time = '08:00 (besok)';
-      }
+    // Base code unik per hari (tanpa IN/OUT)
+    $baseCode = generate_daily_unique_code($now);
 
-      // Kirim ke view
-      $data = [
-          'qr_file' => base_url($filename),
-          'session_label' => $session_label,
-          'next_shift_time' => $next_shift_time,
-          'title' => 'QR Code Absensi Aktif',
-      ];
+    // Format QR final
+    // IN-20251115-ABC123XY
+    $code = $type . '-' . $now->format('Ymd') . '-' . $baseCode;
 
-      $this->load->view('templates_admin/header', $data);
-      $this->load->view('templates_admin/sidebar');
-      $this->load->view('admin/QRCode/absensi_scan', $data);
-      $this->load->view('templates_admin/footer');
-  }
+    // File QR
+    $filename = 'qr/' . $code . '.png';
+
+    // Generate QR jika belum ada
+    if (!file_exists(FCPATH . $filename)) {
+        $params['data'] = $code;
+        $params['level'] = 'H';
+        $params['size'] = 10;
+        $params['savename'] = FCPATH . $filename;
+        $this->ciqrcode->generate($params);
+    }
+
+    // Tentukan label sesi & shift
+    if ($hour < 8) {
+        $session_label = 'Pagi';
+        $next_shift_time = '08:00';
+    } elseif ($hour < 17) {
+        $session_label = 'Pagi';
+        $next_shift_time = '17:00';
+    } else {
+        $session_label = 'Sore';
+        $next_shift_time = '08:00 (besok)';
+    }
+
+    // Data ke view
+    $data = [
+        'qr_file'        => base_url($filename),
+        'session_label'  => $session_label,
+        'next_shift_time'=> $next_shift_time,
+        'title'          => 'QR Code Absensi - ' . $type,
+        'type'           => $type
+    ];
+
+    $this->load->view('templates_admin/header', $data);
+    $this->load->view('templates_admin/sidebar');
+    $this->load->view('admin/QRCode/absensi_scan', $data);
+    $this->load->view('templates_admin/footer');
+}
+
+
+
+
+  // public function generate_qr()
+  // {
+  //     $this->load->helper('qr');
+  //     $this->load->library('ciqrcode');
+
+  //     $now = new DateTime('now', new DateTimeZone('Asia/Jakarta'));
+  //     $code = generate_daily_unique_code($now);
+  //     $filename = 'qr/' . $code . '.png';
+
+  //     // Generate QR jika belum ada
+  //     if (!file_exists(FCPATH . $filename)) {
+  //         $params['data'] = $code;
+  //         $params['level'] = 'H';
+  //         $params['size'] = 10;
+  //         $params['savename'] = FCPATH . $filename;
+  //         $this->ciqrcode->generate($params);
+  //     }
+
+  //     // Tentukan sesi dan waktu berikutnya
+  //     $hour = (int)$now->format('H');
+  //     if ($hour < 8) {
+  //         $session_label = 'Pagi';
+  //         $next_shift_time = '08:00';
+  //     } elseif ($hour < 17) {
+  //         $session_label = 'Pagi';
+  //         $next_shift_time = '17:00';
+  //     } else {
+  //         $session_label = 'Sore';
+  //         $next_shift_time = '08:00 (besok)';
+  //     }
+
+  //     // Kirim ke view
+  //     $data = [
+  //         'qr_file' => base_url($filename),
+  //         'session_label' => $session_label,
+  //         'next_shift_time' => $next_shift_time,
+  //         'title' => 'QR Code Absensi Aktif',
+  //     ];
+
+  //     $this->load->view('templates_admin/header', $data);
+  //     $this->load->view('templates_admin/sidebar');
+  //     $this->load->view('admin/QRCode/absensi_scan', $data);
+  //     $this->load->view('templates_admin/footer');
+  // }
 
 }

@@ -16,28 +16,96 @@ class Datapenempatan extends CI_Controller
     }
   }
 
-  public function index()
-  {
+public function index()
+{
     $data['title'] = "Data Penempatan";
-    $data['penempatan'] = $this->db->query("
-    SELECT 
-        a.*, 
-        b.nama_pelajaran, 
-        c.nama_kelas, 
-        d.tahun_akademik, 
-        e.nama_pegawai
-    FROM data_penempatan a
-    JOIN data_pelajaran b ON a.id_pelajaran = b.id_pelajaran
-    JOIN data_kelas c ON a.id_kelas = c.id_kelas
-    JOIN data_akademik d ON a.id_akademik = d.id_akademik
-    LEFT JOIN data_pegawai e ON a.nip = e.nip
-    ")->result();
+    $hari = $this->input->get('hari');
 
+    // ================================
+    // HITUNG TOTAL DATA
+    // ================================
+    $this->db->from('data_penempatan a');
+    $this->db->join('data_pelajaran b','a.id_pelajaran=b.id_pelajaran');
+    $this->db->join('data_kelas c','a.id_kelas=c.id_kelas');
+    $this->db->join('data_akademik d','a.id_akademik=d.id_akademik');
+    $this->db->join('data_pegawai e','a.nip=e.nip','left');
+
+    if (!empty($hari)) {
+        $this->db->where('a.hari', $hari);
+    }
+
+    $total_rows = $this->db->count_all_results(); // <-- query reset otomatis
+
+    // ================================
+    // PAGINATION SETUP
+    // ================================
+    $this->load->library('pagination');
+
+    $config['base_url'] = base_url('admin/dataPenempatan'); // TIDAK MENGGUNAKAN index/ agar query string aman
+    $config['total_rows'] = $total_rows;
+    $config['per_page'] = 10;
+    $config['page_query_string'] = TRUE;
+    $config['query_string_segment'] = 'page';
+    $config['reuse_query_string'] = TRUE;
+
+    // BOOTSTRAP 4
+    $config['full_tag_open'] = '<nav><ul class="pagination">';
+    $config['full_tag_close'] = '</ul></nav>';
+
+    $config['first_link'] = 'First';
+    $config['first_tag_open'] = '<li class="page-item"><span class="page-link">';
+    $config['first_tag_close'] = '</span></li>';
+
+    $config['last_link'] = 'Last';
+    $config['last_tag_open'] = '<li class="page-item"><span class="page-link">';
+    $config['last_tag_close'] = '</span></li>';
+
+    $config['next_link'] = '&raquo;';
+    $config['next_tag_open'] = '<li class="page-item"><span class="page-link">';
+    $config['next_tag_close'] = '</span></li>';
+
+    $config['prev_link'] = '&laquo;';
+    $config['prev_tag_open'] = '<li class="page-item"><span class="page-link">';
+    $config['prev_tag_close'] = '</span></li>';
+
+    $config['cur_tag_open'] = '<li class="page-item active"><span class="page-link">';
+    $config['cur_tag_close'] = '</span></li>';
+
+    $config['num_tag_open'] = '<li class="page-item"><span class="page-link">';
+    $config['num_tag_close'] = '</span></li>';
+
+    $this->pagination->initialize($config);
+
+    // OFFSET (Jika page kosong → 0)
+    $page = $this->input->get('page');
+    $offset = ($page) ? $page : 0;
+
+    // ================================
+    // QUERY AMBIL DATA PER HALAMAN
+    // ================================
+    $this->db->select('a.*, b.nama_pelajaran, c.nama_kelas, d.tahun_akademik, e.nama_pegawai');
+    $this->db->from('data_penempatan a');
+    $this->db->join('data_pelajaran b','a.id_pelajaran=b.id_pelajaran');
+    $this->db->join('data_kelas c','a.id_kelas=c.id_kelas');
+    $this->db->join('data_akademik d','a.id_akademik=d.id_akademik');
+    $this->db->join('data_pegawai e','a.nip=e.nip','left');
+
+    if (!empty($hari)) {
+        $this->db->where('a.hari', $hari);
+    }
+
+    $this->db->limit($config['per_page'], $offset);
+    $data['penempatan'] = $this->db->get()->result();
+
+    // ================================
+    // LOAD VIEW
+    // ================================
     $this->load->view('templates_admin/header', $data);
     $this->load->view('templates_admin/sidebar');
     $this->load->view('admin/Penempatan/dataPenempatan', $data);
     $this->load->view('templates_admin/footer');
-  }
+}
+
 
   public function tambahData()
   {

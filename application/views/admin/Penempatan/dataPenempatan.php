@@ -14,7 +14,42 @@
   </a>
 
   <?= $this->session->flashdata('pesan'); ?>
-  
+
+  <!-- ================= FILTER HARI ======================= -->
+  <div class="card mb-3">
+      <div class="card-body">
+          <form method="GET" action="">
+
+              <div class="row">
+
+                  <div class="col-md-4">
+                      <label><strong>Filter Hari</strong></label>
+                      <select name="hari" class="form-control">
+                          <option value="">-- Semua Hari --</option>
+                          <?php
+                          $hariList = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+                          foreach ($hariList as $h) : ?>
+                              <option value="<?= $h; ?>" 
+                                  <?= (isset($_GET['hari']) && $_GET['hari'] == $h) ? 'selected' : ''; ?>>
+                                  <?= $h; ?>
+                              </option>
+                          <?php endforeach; ?>
+                      </select>
+                  </div>
+
+                  <div class="col-md-4">
+                      <label><strong>&nbsp;</strong></label><br>
+                      <button class="btn btn-primary">Terapkan</button>
+                      <a href="<?= base_url('admin/dataPenempatan'); ?>" class="btn btn-secondary">Reset</a>
+                  </div>
+
+              </div>
+
+          </form>
+      </div>
+  </div>
+  <!-- ================= END FILTER ======================== -->
+
   <table class="table table-bordered table-stiped mt-2">
     <tr>
         <th class="text-center">No</th>
@@ -22,6 +57,7 @@
         <th class="text-center">Kelas</th>
         <th class="text-center">Tahun Akademik</th>
         <th class="text-center">NIP</th>
+        <th class="text-center">Hari</th>
         <th class="text-center">Jam Mulai</th>
         <th class="text-center">Jam Akhir</th>
         <th class="text-center">Total Jam</th>
@@ -38,6 +74,7 @@
         <td><?= $g->nama_kelas; ?></td>
         <td><?= $g->tahun_akademik; ?></td>
         <td><?= $g->nip; ?></td>
+        <td><?= $g->hari; ?></td>
         <td><?= $g->jam_mulai; ?></td>
         <td><?= $g->jam_akhir; ?></td>
         <td><?= $g->total_jam; ?></td>
@@ -45,11 +82,16 @@
         <td>
           <center>
             <a class="btn btn-sm btn-primary" href="<?= base_url('admin/dataPenempatan/updateData/' . $g->id_penempatan); ?>"><i class="fas fa-edit"></i></a>
-            <!-- <a class="btn btn-sm btn-primary" href="('admin/dataPenempatan/updateData/' . $g->id_penempatan); ?>"><i class="fas fa-info-circle"></i></a> -->
             <a onclick="return confirm('Yakin hapus?')" class="btn btn-sm btn-danger" href="<?= base_url('admin/dataPenempatan/deleteData/' . $g->id_penempatan); ?>"><i class="fas fa-trash"></i></a>
           </center>
         </td>
       </tr>
     <?php endforeach; ?>
   </table>
+
+  <!-- PAGINATION -->
+  <div class="mt-3">
+    <?= $this->pagination->create_links(); ?>
+  </div>
+
 </div>

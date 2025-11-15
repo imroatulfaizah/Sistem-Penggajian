@@ -19,10 +19,20 @@ class Datapenempatan extends CI_Controller
   public function index()
   {
     $data['title'] = "Data Penempatan";
-    $data['penempatan'] = $this->db->query("SELECT a.*, b.nama_pelajaran, c.nama_kelas, d.tahun_akademik FROM data_penempatan a
-                        JOIN data_pelajaran b ON a.id_pelajaran = b.id_pelajaran
-                        JOIN data_kelas c ON a.id_kelas = c.id_kelas
-                        JOIN data_akademik d ON a.id_akademik = d.id_akademik")->result();
+    $data['penempatan'] = $this->db->query("
+    SELECT 
+        a.*, 
+        b.nama_pelajaran, 
+        c.nama_kelas, 
+        d.tahun_akademik, 
+        e.nama_pegawai
+    FROM data_penempatan a
+    JOIN data_pelajaran b ON a.id_pelajaran = b.id_pelajaran
+    JOIN data_kelas c ON a.id_kelas = c.id_kelas
+    JOIN data_akademik d ON a.id_akademik = d.id_akademik
+    LEFT JOIN data_pegawai e ON a.nip = e.nip
+    ")->result();
+
     $this->load->view('templates_admin/header', $data);
     $this->load->view('templates_admin/sidebar');
     $this->load->view('admin/Penempatan/dataPenempatan', $data);

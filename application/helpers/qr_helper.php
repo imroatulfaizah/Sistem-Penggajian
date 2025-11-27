@@ -1,21 +1,20 @@
 <?php
-
-function generate_daily_unique_code($datetime = null)
-{
+function generate_daily_unique_code($datetime = null) {
     $secret = 'qr-secret-key';
     $now = $datetime ?? new DateTime('now', new DateTimeZone('Asia/Jakarta'));
 
+    $hour = (int)$now->format('H');
+    $session = ($hour >= 8 && $hour < 17 ) ? 'pagi' : 'sore';
     $date = $now->format('Y-m-d');
 
-    $raw = $date . '-' . $secret;
+    $raw = $date . '-' . $session . '-' . $secret;
 
-    $hash = hash('sha256', $raw, true);
-    
-    return substr(base62_encode($hash), 0, 8);
+    // Hash, lalu encode ke base62
+    $hash = hash('sha256', $raw, true); // raw binary
+    return substr(base62_encode($hash), 0, 8); // ambil 8 karakter
 }
 
-function base62_encode($data)
-{
+function base62_encode($data) {
     $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $num = '0';
 

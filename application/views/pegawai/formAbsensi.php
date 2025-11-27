@@ -10,7 +10,23 @@
 
   <div class="card" style="width: 60%; margin-bottom:100px;">
     <div class="card-body">
-
+    <div class="row mb-3">
+    <div class="col-md-12 text-center">
+        <?php if ($this->session->userdata('testing_radius')): ?>
+            <div class="alert alert-warning">
+                <strong>MODE TESTING AKTIF:</strong> Radius bebas (Unlimited).
+                <br>
+                <a href="<?= base_url('pegawai/DataAbsensi/set_radius_mode/normal') ?>" class="btn btn-sm btn-secondary mt-2">
+                    Matikan Mode Testing (Kembali ke Normal)
+                </a>
+            </div>
+        <?php else: ?>
+            <a href="<?= base_url('pegawai/DataAbsensi/set_radius_mode/unlimited') ?>" class="btn btn-sm btn-outline-warning">
+                <i class="fas fa-wrench"></i> Aktifkan Mode Testing (Bypass Radius)
+            </a>
+        <?php endif; ?>
+    </div>
+</div>
       <form id="attendanceForm" method="post" action="<?= site_url('pegawai/dataAbsensi/do_attend'); ?>">
 
         <div class="form-group">

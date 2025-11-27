@@ -1,7 +1,5 @@
-<!-- Begin Page Content -->
 <div class="container-fluid">
 
-  <!-- Page Heading -->
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800"><?= $title; ?></h1>
   </div>
@@ -84,7 +82,7 @@
   <div class="alert alert-info">
     Menampilkan data gaji pegawai bulan: <span class="font-weight-bold"><?= $bulan; ?></span> tahun: <span class="font-weight-bold"><?= $tahun; ?></span>
   </div>
-  <?php /*jika data $gaji maka muncul*/ ?>
+  
   <?php
   $jml_data = count($gaji);
   if ($jml_data > 0) { ?>
@@ -103,13 +101,14 @@
           <th class="text-center">Total Gaji</th>
         </tr>
 
-        <?php foreach ($jam as $p) {
-          $jam = $p->total_jam;
-        } ?>
         <?php
         $no = 1;
         foreach ($gaji as $g) : ?>
-          <?php $total_hadir = $g->hadir; ?>
+          <?php 
+            $total_hadir = $g->hadir; 
+            // Ambil total jam dari query controller yang baru
+            $jam_mengajar = $g->total_jam; 
+          ?>
           <tr>
             <td><?= $no++; ?></td>
             <td><?= $g->nip; ?></td>
@@ -118,18 +117,19 @@
             <td><?= $g->nama_jabatan; ?></td>
             <td>Rp. <?= number_format($g->tunjangan_jabatan, 0, ',', '.'); ?>,-</td>
             <td>Rp. <?= number_format($g->tunjangan_transport, 0, ',', '.'); ?> x <?= $total_hadir ?></td>
-            <td>Rp. <?= number_format($g->upah_mengajar, 0, ',', '.'); ?> x <?= $jam ?></td>
-            <?php    #jumlahkan seluruh gaji 
+            <td>Rp. <?= number_format($g->upah_mengajar, 0, ',', '.'); ?> x <?= number_format($jam_mengajar, 1) ?></td>
+            
+            <?php 
+              // Hitung total gaji dengan variabel yang benar
+              $total_gaji = $g->tunjangan_jabatan + ($g->tunjangan_transport * $total_hadir) + ($g->upah_mengajar * $jam_mengajar); 
             ?>
-            <?php $total_gaji = $g->tunjangan_jabatan + $g->tunjangan_transport * $total_hadir + $g->upah_mengajar * $jam; ?>
             <td>Rp. <?= number_format($total_gaji, 0, ',', '.'); ?>,-</td>
           </tr>
 
         <?php endforeach; ?>
       </table>
     </div>
-    <?php     #jika data $gaji tidak ada
-    ?>
+  
   <?php } else { ?>
     <span class="badge badge-danger"><i class="fas fa-info-circle"></i> Data masih kosong, silahkan input data kehadiran pada bulan dan tahun yang anda pilih!</span>
   <?php } ?>
@@ -137,7 +137,6 @@
 </div>
 
 
-<!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -155,4 +154,4 @@
       </div>
     </div>
   </div>
-</div>
+</div>  

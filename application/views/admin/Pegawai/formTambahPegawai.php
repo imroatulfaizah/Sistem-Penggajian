@@ -1,7 +1,5 @@
-<!-- Begin Page Content -->
 <div class="container-fluid">
 
-  <!-- Page Heading -->
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800"><?= $title; ?></h1>
   </div>
@@ -96,6 +94,11 @@
         </div>
 
         <div class="form-group">
+          <label for="">Ekstrakurikuler</label>
+          <input type="text" name="ekstra" class="form-control" placeholder="Kosongkan jika bukan guru ekstra">
+        </div>
+
+        <div class="form-group">
           <label for="">Alamat</label>
           <input type="text" name="alamat" class="form-control">
           <?= form_error('alamat', '<div class="text-small text-danger">', '</div>') ?>
@@ -118,6 +121,4 @@
     </div>
 
   </div>
-
-
 </div>

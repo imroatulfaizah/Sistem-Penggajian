@@ -58,6 +58,11 @@ class DataPegawai extends CI_Controller
       $no_hp         = $this->input->post('no_hp');
       $email         = $this->input->post('email');
       $pendidikan    = $this->input->post('pendidikan');
+      
+      // LOGIC BARU: Cek jika kosong set NULL
+      $ekstra_input  = $this->input->post('ekstra');
+      $ekstra        = empty($ekstra_input) ? NULL : $ekstra_input;
+
       $alamat        = $this->input->post('alamat');
       $photo         = $_FILES['photo']['name'];
       if ($photo = '') {
@@ -86,6 +91,7 @@ class DataPegawai extends CI_Controller
         'no_hp'         => $no_hp,
         'email'         => $email,
         'pendidikan'    => $pendidikan,
+        'ekstra'        => $ekstra, // Typo $esktra sudah diperbaiki
         'alamat'        => $alamat,
       );
 
@@ -111,6 +117,7 @@ class DataPegawai extends CI_Controller
     $this->load->view('admin/Pegawai/formUpdatePegawai', $data);
     $this->load->view('templates_admin/footer');
   }
+
   public function updateDataAksi()
   {
     // echo "disini";
@@ -134,6 +141,11 @@ class DataPegawai extends CI_Controller
       $no_hp         = $this->input->post('no_hp');
       $email         = $this->input->post('email');
       $pendidikan    = $this->input->post('pendidikan');
+      
+      // LOGIC BARU: Cek jika kosong set NULL
+      $ekstra_input  = $this->input->post('ekstra');
+      $ekstra        = empty($ekstra_input) ? NULL : $ekstra_input;
+
       $alamat        = $this->input->post('alamat');
       $photo         = $_FILES['photo']['name'];
       if ($photo) {
@@ -160,6 +172,7 @@ class DataPegawai extends CI_Controller
         'no_hp'         => $no_hp,
         'email'         => $email,
         'pendidikan'    => $pendidikan,
+        'ekstra'        => $ekstra,
         'alamat'        => $alamat,
         'hak_akses'     => $hak_akses,
       );

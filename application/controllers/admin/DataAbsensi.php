@@ -229,63 +229,76 @@ class DataAbsensi extends CI_Controller
     $this->form_validation->set_rules('alpha', 'Alpha', 'required');
   }
 
-public function generate_qr()
-{
-    $this->load->helper('qr');
-    $this->load->library('ciqrcode');
-
-    // Waktu sekarang
-    $now = new DateTime('now', new DateTimeZone('Asia/Jakarta'));
-
-    // Tentukan tipe otomatis
-    $hour = (int)$now->format('H');
-    $type = ($hour >= 17) ? 'OUT' : 'IN';  // otomatis IN sebelum 17:00, OUT setelahnya
-
-    // Base code unik per hari (tanpa IN/OUT)
-    $baseCode = generate_daily_unique_code($now);
-
-    // Format QR final
-    // IN-20251115-ABC123XY
-    $code = $type . '-' . $now->format('Ymd') . '-' . $baseCode;
-
-    // File QR
-    $filename = 'qr/' . $code . '.png';
-
-    // Generate QR jika belum ada
-    if (!file_exists(FCPATH . $filename)) {
-        $params['data'] = $code;
-        $params['level'] = 'H';
-        $params['size'] = 10;
-        $params['savename'] = FCPATH . $filename;
-        $this->ciqrcode->generate($params);
-    }
-
-    // Tentukan label sesi & shift
-    if ($hour < 8) {
-        $session_label = 'Pagi';
-        $next_shift_time = '08:00';
-    } elseif ($hour < 17) {
-        $session_label = 'Pagi';
-        $next_shift_time = '17:00';
-    } else {
-        $session_label = 'Sore';
-        $next_shift_time = '08:00 (besok)';
-    }
-
-    // Data ke view
-    $data = [
-        'qr_file'        => base_url($filename),
-        'session_label'  => $session_label,
-        'next_shift_time'=> $next_shift_time,
-        'title'          => 'QR Code Absensi - ' . $type,
-        'type'           => $type
-    ];
-
-    $this->load->view('templates_admin/header', $data);
-    $this->load->view('templates_admin/sidebar');
-    $this->load->view('admin/QRCode/absensi_scan', $data);
-    $this->load->view('templates_admin/footer');
-}
+  public function generate_qr($forced_type = null)
+  {
+      $this->load->helper('qr');
+      $this->load->library('ciqrcode');
+  
+      // Waktu sekarang
+      $now = new DateTime('now', new DateTimeZone('Asia/Jakarta'));
+      $hour = (int)$now->format('H');
+  
+      // -----------------------------------------------------------
+      // LOGIC MODIFIKASI: Cek apakah ada paksaan tipe dari URL?
+      // -----------------------------------------------------------
+      if ($forced_type === 'IN') {
+          $type = 'IN';
+          $session_label = 'Pagi (Testing Mode)';
+          $next_shift_time = '17:00';
+      } elseif ($forced_type === 'OUT') {
+          $type = 'OUT';
+          $session_label = 'Sore (Testing Mode)';
+          $next_shift_time = '08:00 (besok)';
+      } else {
+          // --- Logic Normal (Otomatis berdasarkan jam) ---
+          $type = ($hour >= 13) ? 'OUT' : 'IN';  
+  
+          // Label sesi normal
+          if ($hour < 8) {
+              $session_label = 'Pagi';
+              $next_shift_time = '08:00';
+          } elseif ($hour < 17) {
+              $session_label = 'Pagi';
+              $next_shift_time = '17:00';
+          } else {
+              $session_label = 'Sore';
+              $next_shift_time = '08:00 (besok)';
+          }
+      }
+      // -----------------------------------------------------------
+  
+      // Base code unik per hari
+      $baseCode = generate_daily_unique_code($now);
+  
+      // Format QR final: IN-20251115-ABC123XY
+      // Kita tambahkan random string dikit biar QR code berubah gambarnya meski string sama
+      $code = $type . '-' . $now->format('Ymd') . '-' . $baseCode; 
+  
+      // File QR (Ditumpuk saja biar tidak menuh-menuhin server saat testing)
+      // Atau kalau mau unik, tambahkan time() di nama file
+      $filename = 'qr/' . $type . '-' . $now->format('Ymd') . '.png';
+  
+      // Generate QR (Selalu generate ulang untuk testing biar fresh)
+      $params['data'] = $code;
+      $params['level'] = 'H';
+      $params['size'] = 10;
+      $params['savename'] = FCPATH . $filename;
+      $this->ciqrcode->generate($params);
+  
+      // Data ke view
+      $data = [
+          'qr_file'        => base_url($filename) . '?t=' . time(), // trik agar gambar tidak di-cache browser
+          'session_label'  => $session_label,
+          'next_shift_time'=> $next_shift_time,
+          'title'          => 'QR Code Absensi - ' . $type,
+          'type'           => $type
+      ];
+  
+      $this->load->view('templates_admin/header', $data);
+      $this->load->view('templates_admin/sidebar');
+      $this->load->view('admin/QRCode/absensi_scan', $data);
+      $this->load->view('templates_admin/footer');
+  }
 
 
 

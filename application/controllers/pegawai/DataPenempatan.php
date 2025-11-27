@@ -18,7 +18,7 @@ class DataPenempatan extends CI_Controller
 
   public function index()
   {
-    $data['title'] = "Data Penempatan";
+    $data['title'] = "Jadwal Mengajar";
     $nip = $this->session->userdata('nip');
     $data['penempatan'] = $this->db->query("SELECT 
       a.*,

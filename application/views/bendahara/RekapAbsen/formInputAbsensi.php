@@ -72,9 +72,7 @@
         <td class="text-center">Jenis Kelamin</td>
         <td class="text-center">Jabatan</td>
         <td class="text-center" width="10%;">Hadir</td>
-        <td class="text-center" width="10%;">Sakit</td>
-        <td class="text-center" width="10%;">Izin</td>
-        <td class="text-center" width="10%;">Alpha</td>
+        <td class="text-center" width="10%;">Tidak Hadir</td>
       </tr>
 
       <?php
@@ -93,9 +91,7 @@
           <td><?= $a->jenis_kelamin; ?></td>
           <td><?= $a->jabatan; ?></td>
           <td><input type="number" name="hadir[]" class="form-control" value="0"></td>
-          <td><input type="number" name="sakit[]" class="form-control" value="0"></td>
           <td><input type="number" name="izin[]" class="form-control" value="0"></td>
-          <td><input type="number" name="alpha[]" class="form-control" value="0"></td>
         </tr>
       <?php endforeach; ?>
     </table>

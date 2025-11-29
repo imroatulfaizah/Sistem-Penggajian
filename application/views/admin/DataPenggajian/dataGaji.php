@@ -99,6 +99,7 @@
           <th class="text-center">Tunjangan Transport</th>
           <th class="text-center">Upah Mengajar</th>
           <th class="text-center">Total Gaji</th>
+          <th class="text-center">Action</th>
         </tr>
 
         <?php
@@ -124,6 +125,12 @@
               $total_gaji = $g->tunjangan_jabatan + ($g->tunjangan_transport * $total_hadir) + ($g->upah_mengajar * $jam_mengajar); 
             ?>
             <td>Rp. <?= number_format($total_gaji, 0, ',', '.'); ?>,-</td>
+            <td class="text-center">
+              <a href="<?= base_url('admin/dataPenggajian/printSlip/' . $g->nip . '/' . $bulan . '/' . $tahun) ?>" 
+                class="btn btn-sm btn-info" target="_blank">
+                <i class="fas fa-print"></i> Slip
+              </a>
+          </td>
           </tr>
 
         <?php endforeach; ?>
@@ -155,3 +162,7 @@
     </div>
   </div>
 </div>  
+
+<div class="mt-3 mb-5">
+    <?= $this->pagination->create_links(); ?>
+</div>

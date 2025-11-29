@@ -40,7 +40,7 @@
         <td>Rp. <?= number_format($total_gaji, 0, ',', '.'); ?>,-</td>
         <td>
           <center>
-            <a class="btn btn-sm btn-primary" target="blank" href="<?= base_url('pegawai/dataGaji/cetakSlip/' . $g->nip); ?>"><i class="fas fa-print"></i></a>
+            <a class="btn btn-sm btn-primary" target="blank" href="<?= base_url('pegawai/dataGaji/cetakSlip/' . $g->nip . '/' . $g->bulan ); ?>"><i class="fas fa-print"></i></a>
           </center>
         </td>
       </tr>

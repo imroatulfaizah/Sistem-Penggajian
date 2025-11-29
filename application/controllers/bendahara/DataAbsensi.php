@@ -112,8 +112,6 @@ class DataAbsensi extends CI_Controller
       $jenis_kelamin   = $this->input->post('jenis_kelamin');
       $nama_jabatan = $this->input->post('nama_jabatan');
       $hadir   = $this->input->post('hadir');
-      $sakit   = $this->input->post('sakit');
-      $alpha   = $this->input->post('alpha');
       $izin   = $this->input->post('izin');
 
 

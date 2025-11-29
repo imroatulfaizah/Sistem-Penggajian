@@ -89,9 +89,7 @@
           <td><?= $a->jenis_kelamin; ?></td>
           <td><?= $a->jabatan; ?></td>
           <td><?= $a->hadir; ?></td>
-          <td><?= $a->sakit; ?></td>
           <td><?= $a->izin; ?></td>
-          <td><?= $a->alpha; ?></td>
           <td>
             <center>
               <!--<a class="btn btn-sm btn-primary" href="<?= base_url('kepsek/dataAbsensi/updateData/' . $a->id_kehadiran); ?>"><i class="fas fa-edit"></i></a>-->

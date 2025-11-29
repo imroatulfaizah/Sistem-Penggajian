@@ -53,9 +53,7 @@ class DataAbsensi extends CI_Controller
             'jenis_kelamin' => $post['jenis_kelamin'][$key],
             'nama_jabatan'  => $post['nama_jabatan'][$key],
             'hadir'         => $post['hadir'][$key],
-            'sakit'         => $post['sakit'][$key],
             'izin'         => $post['izin'][$key],
-            'alpha'         => $post['alpha'][$key],
           );
         }
       }

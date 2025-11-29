@@ -157,9 +157,7 @@ class DataAbsensi extends CI_Controller
           'jenis_kelamin' => $pegawai->jenis_kelamin,
           'nama_jabatan'  => $pegawai->jabatan,
           'hadir'         => 1,
-          'sakit'         => 0,
-          'izin'          => 0,
-          'alpha'         => 0
+          'izin'          => 0
       ];
 
       $this->db->insert('data_kehadiran', $data);

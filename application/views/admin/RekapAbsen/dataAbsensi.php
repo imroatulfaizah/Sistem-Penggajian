@@ -75,9 +75,7 @@
         <td class="text-center">Jenis Kelamin</td>
         <td class="text-center">Jabatan</td>
         <td class="text-center">Hadir</td>
-        <td class="text-center">Sakit</td>
-        <td class="text-center">Izin</td>
-        <td class="text-center">Alpha</td>
+        <td class="text-center">Tidak Hadir</td>
         <th class="text-center">Action</th>
       </tr>
       <?php
@@ -90,9 +88,7 @@
           <td><?= $a->jenis_kelamin; ?></td>
           <td><?= $a->jabatan; ?></td>
           <td><?= $a->hadir; ?></td>
-          <td><?= $a->sakit; ?></td>
           <td><?= $a->izin; ?></td>
-          <td><?= $a->alpha; ?></td>
           <td>
             <center>
               <a class="btn btn-sm btn-primary" href="<?= base_url('admin/dataAbsensi/updateData/' . $a->id_kehadiran); ?>"><i class="fas fa-edit"></i></a>

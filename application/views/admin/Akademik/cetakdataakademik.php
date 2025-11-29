@@ -10,41 +10,55 @@
             font-family: Arial;
             color: black;
         }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+        }
+        th {
+            text-align: center;
+        }
     </style>
 </head>
 
 <body>
-    <br>
-    <br>
-    <br>
-    <br>
 
     <center>
-        <img src="<?= base_url('assets/img/mts.png'); ?>" alt="Logo MTS Nurul Mubtadiin" style="width: 100px; height: auto; margin-bottom: 15px;">
+        <img src="<?= base_url('assets/img/mts.png'); ?>" style="width: 100px; margin-bottom: 15px;">
         <h1>MTS Nurul Mubtadiin</h1>
         <h2>Daftar Data Akademik</h2>
     </center>
 
-
-    <table class="table table-bordered table-striped">
+    <table>
         <tr>
-            <th class="text-center">No</th>
-            <th class="text-center">TAhun Akademik</th>
+            <th>No</th>
+            <th>Tahun Akademik</th>
+            <th>Semester</th>
+            <th>Nama Akademik</th>
+            <th>Aktif?</th>
         </tr>
-        <?php
-        $no = 1;
-        foreach ($akademik as $g) : ?>
-            <tr>
-                <td><?= $no++; ?></td>
-                <td><?= $g->tahun_akademik; ?></td>
-            </tr>
 
+        <?php $no = 1; foreach ($akademik as $g): ?>
+        <tr>
+            <td class="text-center"><?= $no++; ?></td>
+            <td><?= $g->tahun_akademik; ?></td>
+            <td><?= $g->semester; ?></td>
+            <td><?= $g->nama_akademik; ?></td>
+            <td class="text-center"><?= $g->is_aktif == 1 ? 'Aktif' : 'Tidak'; ?></td>
+        </tr>
         <?php endforeach; ?>
+
     </table>
+
 </body>
 
 </html>
 
-<script type="text/javascript">
+<script>
     window.print();
 </script>

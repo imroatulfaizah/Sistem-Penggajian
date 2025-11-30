@@ -226,6 +226,8 @@ switch (ENVIRONMENT)
 	// The name of THIS file
 	define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
 
+	date_default_timezone_set('Asia/Jakarta');
+
 	// Path to the system directory
 	define('BASEPATH', $system_path);
 
@@ -313,3 +315,4 @@ switch (ENVIRONMENT)
  * And away we go...
  */
 require_once BASEPATH.'core/CodeIgniter.php';
+

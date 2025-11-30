@@ -27,11 +27,12 @@ class Dashboard extends CI_Controller
     $admin = $this->db->query("SELECT * FROM data_pegawai WHERE jabatan = 'Kepala Bidang'");
 
     $jabatan = $this->db->query("SELECT * FROM data_jabatan");
-    $kehadiran = $this->db->query("SELECT * FROM data_kehadiran");
+    $kehadiran = $this->db->query("SELECT * FROM detail_kehadiran WHERE DATE(jam_clockin) = CURDATE()");
     $data['pegawai'] = $pegawai->num_rows();
     $data['admin'] = $admin->num_rows();
     $data['jabatan'] = $jabatan->num_rows();
     $data['kehadiran'] = $kehadiran->num_rows();
+    $data['tidakhadir'] = $pegawai->num_rows() - $kehadiran->num_rows();
     //untuk menampilkan halaman
     $this->load->view('templates_kepsek/header', $data);
     $this->load->view('templates_kepsek/sidebar');

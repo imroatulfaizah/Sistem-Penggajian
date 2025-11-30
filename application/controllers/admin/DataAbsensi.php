@@ -95,9 +95,7 @@ class DataAbsensi extends CI_Controller
               'jenis_kelamin' => $pegawai->jenis_kelamin,
               'nama_jabatan'  => $pegawai->jabatan,
               'hadir'         => 1,
-              'sakit'         => 0,
-              'izin'          => 0,
-              'alpha'         => 0
+              'izin'          => 0
           ];
           $this->db->insert('data_kehadiran', $data);
       }
@@ -119,9 +117,7 @@ class DataAbsensi extends CI_Controller
             'jenis_kelamin' => $post['jenis_kelamin'][$key],
             'nama_jabatan'  => $post['nama_jabatan'][$key],
             'hadir'         => $post['hadir'][$key],
-            'sakit'         => $post['sakit'][$key],
             'izin'         => $post['izin'][$key],
-            'alpha'         => $post['alpha'][$key],
           );
         }
       }
@@ -178,8 +174,6 @@ class DataAbsensi extends CI_Controller
       $jenis_kelamin   = $this->input->post('jenis_kelamin');
       $nama_jabatan = $this->input->post('nama_jabatan');
       $hadir   = $this->input->post('hadir');
-      $sakit   = $this->input->post('sakit');
-      $alpha   = $this->input->post('alpha');
       $izin   = $this->input->post('izin');
 
 
@@ -188,8 +182,6 @@ class DataAbsensi extends CI_Controller
         'jenis_kelamin'   => $jenis_kelamin,
         'nama_jabatan' => $nama_jabatan,
         'hadir' => $hadir,
-        'sakit'   => $sakit,
-        'alpha' => $alpha,
         'izin'  => $izin,
       );
 
@@ -225,8 +217,7 @@ class DataAbsensi extends CI_Controller
     $this->form_validation->set_rules('jenis_kelamin', 'Jenis Kelamin', 'required');
     $this->form_validation->set_rules('jabatan', 'Jabatan', 'required');
     $this->form_validation->set_rules('hadir', 'Hadir', 'required');
-    $this->form_validation->set_rules('sakit', 'Sakit', 'required');
-    $this->form_validation->set_rules('alpha', 'Alpha', 'required');
+    $this->form_validation->set_rules('izin', 'Izin', 'required');
   }
 
   public function generate_qr($forced_type = null)

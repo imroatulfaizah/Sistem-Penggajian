@@ -19,7 +19,7 @@ class DataAbsensi extends CI_Controller
         }
 
         // Load helper nama pelajaran (wajib!)
-        $this->load->helper('nama_pelajaran');
+        // $this->load->helper('nama_pelajaran');
     }
 
     // ==================================================================

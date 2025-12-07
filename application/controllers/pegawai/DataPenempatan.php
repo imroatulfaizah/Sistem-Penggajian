@@ -18,23 +18,91 @@ class DataPenempatan extends CI_Controller
 
   public function index()
   {
-    $data['title'] = "Jadwal Mengajar";
-    $nip = $this->session->userdata('nip');
-    $data['penempatan'] = $this->db->query("SELECT 
-      a.*,
-      SUM(a.total_jam) AS total_jam,
-      b.nama_pelajaran,
-      c.nama_kelas
-      FROM data_penempatan a
-      INNER JOIN data_pelajaran b ON a.id_pelajaran = b.id_pelajaran
-      INNER JOIN data_kelas c ON a.id_kelas = c.id_kelas
-      WHERE a.nip = $nip
-      GROUP BY a.id_penempatan, a.id_pelajaran, a.id_kelas, a.id_akademik, a.nip, a.jam_mulai, a.jam_akhir, a.keterangan, b.nama_pelajaran, c.nama_kelas
-    ")->result();
-    $this->load->view('templates_pegawai/header', $data);
-    $this->load->view('templates_pegawai/sidebar');
-    $this->load->view('pegawai/dataPenempatan', $data);
-    $this->load->view('templates_pegawai/footer');
+      $data['title'] = "Jadwal Mengajar";
+
+      $nip = $this->session->userdata('nip');
+
+      // ------------------- FILTER HARI -------------------
+      $hari = $this->input->get('hari');
+
+      // Query utama (hanya milik pegawai yang login)
+      $this->db->select('
+          a.*,
+          COALESCE(pp.nama_pelajaran, p.nama_pelajaran) as nama_pelajaran,
+          c.nama_kelas,
+          d.tahun_akademik,
+          d.semester,
+          d.nama_akademik
+      ');
+      $this->db->from('data_penempatan a');
+      $this->db->join('data_pelajaran p', 'a.id_pelajaran = p.id_pelajaran');
+      $this->db->join('data_pelajaran_periode pp', 
+          'pp.id_pelajaran = a.id_pelajaran AND pp.id_akademik = a.id_akademik', 'left');
+      $this->db->join('data_kelas c', 'a.id_kelas = c.id_kelas');
+      $this->db->join('data_akademik d', 'a.id_akademik = d.id_akademik');
+      $this->db->where('a.nip', $nip);
+
+      // Filter hari jika ada
+      if (!empty($hari)) {
+          $this->db->where('a.hari', $hari);
+      }
+
+      // Clone query untuk menghitung total baris (pagination)
+      $count_query = clone $this->db;
+      $total_rows  = $count_query->count_all_results();
+
+      // ------------------- PAGINATION -------------------
+      $this->load->library('pagination');
+
+      $config['base_url']            = base_url('pegawai/dataPenempatan');
+      $config['total_rows']          = $total_rows;
+      $config['per_page']            = 10;                    // 10 baris per halaman
+      $config['page_query_string']   = TRUE;
+      $config['query_string_segment']= 'page';
+      $config['reuse_query_string']  = TRUE;
+      $config['num_links']           = 5;
+
+      // Bootstrap 4 style
+      $config['full_tag_open']    = '<nav><ul class="pagination justify-content-center">';
+      $config['full_tag_close']   = '</ul></nav>';
+      $config['attributes']       = ['class' => 'page-link'];
+      $config['first_link']       = 'First';
+      $config['last_link']        = 'Last';
+      $config['first_tag_open']   = '<li class="page-item">';
+      $config['first_tag_close']  = '</li>';
+      $config['prev_link']        = 'Previous';
+      $config['prev_tag_open']    = '<li class="page-item">';
+      $config['prev_tag_close']   = '</li>';
+      $config['next_link']        = 'Next';
+      $config['next_tag_open']    = '<li class="page-item">';
+      $config['next_tag_close']   = '</li>';
+      $config['last_tag_open']    = '<li class="page-item">';
+      $config['last_tag_close']   = '</li>';
+      $config['cur_tag_open']     = '<li class="page-item active"><span class="page-link">';
+      $config['cur_tag_close']    = '<span class="sr-only">(current)</span></span></li>';
+      $config['num_tag_open']     = '<li class="page-item">';
+      $config['num_tag_close']    = '</li>';
+
+      $this->pagination->initialize($config);
+
+      $page   = $this->input->get('page') ? $this->input->get('page') : 0;
+
+      // Order by hari & jam mulai
+      $this->db->order_by("FIELD(a.hari, 'Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu')");
+      $this->db->order_by('a.jam_mulai', 'ASC');
+      $this->db->limit($config['per_page'], $page);
+
+      $data['penempatan'] = $this->db->get()->result();
+      $data['pagination'] = $this->pagination->create_links();
+      $data['offset']     = $page;   // untuk nomor urut di tabel
+
+      // kirim filter hari agar tetap terpilih
+      $data['selected_hari'] = $hari;
+
+      $this->load->view('templates_pegawai/header', $data);
+      $this->load->view('templates_pegawai/sidebar');
+      $this->load->view('pegawai/dataPenempatan', $data);
+      $this->load->view('templates_pegawai/footer');
   }
 
   public function tambahData()

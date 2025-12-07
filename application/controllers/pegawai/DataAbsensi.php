@@ -239,18 +239,93 @@ class DataAbsensi extends CI_Controller
     public function detailKehadiran()
     {
         $data['title'] = "Rekap Kehadiran Harian";
+
         $nip = $this->session->userdata('nip');
-        $data['kehadiran'] = $this->db->where('nip', $nip)
-                                      ->order_by('jam_clockin', 'DESC')
-                                      ->get('detail_kehadiran')
-                                      ->result();
+
+        // Ambil filter dari GET
+        $bulan = $this->input->get('bulan');   // format: 01-12
+        $tahun = $this->input->get('tahun');   // format: 2025
+
+        // Query utama
+        $this->db->select('*');
+        $this->db->from('detail_kehadiran');
+        $this->db->where('nip', $nip);
+
+        // Filter bulan & tahun jika ada
+        if (!empty($bulan) && !empty($tahun)) {
+            $this->db->where('MONTH(jam_clockin)', $bulan);
+            $this->db->where('YEAR(jam_clockin)', $tahun);
+        } elseif (!empty($bulan)) {
+            $this->db->where('MONTH(jam_clockin)', $bulan);
+        } elseif (!empty($tahun)) {
+            $this->db->where('YEAR(jam_clockin)', $tahun);
+        }
+
+        // Clone untuk hitung total baris (pagination)
+        $count_query = clone $this->db;
+        $total_rows  = $count_query->count_all_results();
+
+        // ------------------- PAGINATION -------------------
+        $this->load->library('pagination');
+
+        $config['base_url']            = base_url('pegawai/dataAbsensi/detailKehadiran');
+        $config['total_rows']          = $total_rows;
+        $config['per_page']            = 10;
+        $config['page_query_string']   = TRUE;
+        $config['query_string_segment']= 'page';
+        $config['reuse_query_string']  = TRUE;   // penting agar filter bulan/tahun tetap ada saat pindah halaman
+        $config['num_links']           = 5;
+
+        // Bootstrap 4 style
+        $config['full_tag_open']  = '<nav><ul class="pagination justify-content-center">';
+        $config['full_tag_close'] = '</ul></nav>';
+        $config['attributes']     = ['class' => 'page-link'];
+        $config['first_link']     = 'First';
+        $config['last_link']      = 'Last';
+        $config['first_tag_open'] = '<li class="page-item">';
+        $config['first_tag_close']= '</li>';
+        $config['prev_link']      = 'Previous';
+        $config['prev_tag_open']  = '<li class="page-item">';
+        $config['prev_tag_close'] = '</li>';
+        $config['next_link']      = 'Next';
+        $config['next_tag_open']  = '<li class="page-item">';
+        $config['next_tag_close'] = '</li>';
+        $config['last_tag_open']  = '<li class="page-item">';
+        $config['last_tag_close'] = '</li>';
+        $config['cur_tag_open']   = '<li class="page-item active"><span class="page-link">';
+        $config['cur_tag_close']  = '<span class="sr-only">(current)</span></span></li>';
+        $config['num_tag_open']   = '<li class="page-item">';
+        $config['num_tag_close']  = '</li>';
+
+        $this->pagination->initialize($config);
+
+        $page = $this->input->get('page') ? $this->input->get('page') : 0;
+
+        // Query dengan limit + order
+        $this->db->order_by('jam_clockin', 'DESC');
+        $this->db->limit($config['per_page'], $page);
+
+        $data['kehadiran']   = $this->db->get()->result();
+        $data['pagination']  = $this->pagination->create_links();
+        $data['offset']      = $page;
+
+        // Kirim data filter ke view agar tetap terpilih
+        $data['selected_bulan'] = $bulan;
+        $data['selected_tahun'] = $tahun;
+
+        // Daftar tahun (otomatis dari data atau 5 tahun terakhir)
+        $this->db->select('YEAR(jam_clockin) as tahun');
+        $this->db->from('detail_kehadiran');
+        $this->db->where('nip', $nip);
+        $this->db->group_by('YEAR(jam_clockin)');
+        $this->db->order_by('tahun', 'DESC');
+        $data['daftar_tahun'] = $this->db->get()->result_array();
 
         $this->load->view('templates_pegawai/header', $data);
         $this->load->view('templates_pegawai/sidebar');
         $this->load->view('pegawai/detailKehadiran', $data);
         $this->load->view('templates_pegawai/footer');
     }
-
     // ==================================================================
     // FUNGSI BANTUAN
     // ==================================================================

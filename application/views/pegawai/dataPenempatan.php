@@ -12,6 +12,25 @@
 
   <?= $this->session->flashdata('pesan'); ?>
 
+  <!-- ================== MODE TESTING RADIUS (BARU) ================== -->
+  <div class="row mb-4">
+    <div class="col-md-12 text-center">
+      <?php if ($this->session->userdata('testing_radius')): ?>
+        <div class="alert alert-warning d-inline-block">
+          <strong>MODE TESTING RADIUS AKTIF:</strong> Anda bisa Clock In/Out dari mana saja (radius bypass).<br>
+          <a href="<?= base_url('pegawai/dataAbsensi/set_radius_mode/normal') ?>" class="btn btn-sm btn-secondary mt-2">
+            <i class="fas fa-lock"></i> Matikan Mode Testing (Kembali Normal)
+          </a>
+        </div>
+      <?php else: ?>
+        <a href="<?= base_url('pegawai/dataAbsensi/set_radius_mode/unlimited') ?>" class="btn btn-sm btn-outline-warning">
+          <i class="fas fa-wrench"></i> Aktifkan Mode Testing Radius (Bypass Lokasi)
+        </a>
+      <?php endif; ?>
+    </div>
+  </div>
+  <!-- ============================================================== -->
+
   <!-- FILTER HARI -->
   <form method="get" class="mb-4">
     <div class="row">
@@ -80,15 +99,28 @@
           <td><?= $g->total_jam ?></td>
           <td><?= htmlspecialchars($g->keterangan ?? '-') ?></td>
           <td class="text-center">
-            <!-- Clock In / Clock Out tetap sama seperti kode kamu -->
             <form style="display:inline-block;" method="post" action="<?= site_url('pegawai/dataAbsensi/clockIn/'.$g->id_penempatan) ?>" class="form-absensi">
-              <input type="hidden" name="lat" class="lat"><input type="hidden" name="lon" class="lon">
-              <button type="button" class="btn btn-sm btn-primary btn-clockin <?= $disabled ?>">Clock In</button>
+              <input type="hidden" name="lat" class="lat">
+              <input type="hidden" name="lon" class="lon">
+              <button type="button" class="btn btn-sm btn-primary btn-clockin <?= $disabled ?>">
+                <?php if ($this->session->userdata('testing_radius')): ?>
+                  <i class="fas fa-wrench"></i> Clock In (Testing)
+                <?php else: ?>
+                  Clock In
+                <?php endif; ?>
+              </button>
             </form>
 
             <form style="display:inline-block;" method="post" action="<?= site_url('pegawai/dataAbsensi/clockOut/'.$g->id_penempatan) ?>" class="form-absensi">
-              <input type="hidden" name="lat" class="lat"><input type="hidden" name="lon" class="lon">
-              <button type="button" class="btn btn-sm btn-success btn-clockout <?= $disabled ?>">Clock Out</button>
+              <input type="hidden" name="lat" class="lat">
+              <input type="hidden" name="lon" class="lon">
+              <button type="button" class="btn btn-sm btn-success btn-clockout <?= $disabled ?>">
+                <?php if ($this->session->userdata('testing_radius')): ?>
+                  <i class="fas fa-wrench"></i> Clock Out (Testing)
+                <?php else: ?>
+                  Clock Out
+                <?php endif; ?>
+              </button>
             </form>
 
             <a href="<?= site_url('pegawai/dataAbsensi/detailAbsensi/'.$g->id_penempatan) ?>" class="btn btn-sm btn-info">Detail</a>
@@ -109,18 +141,21 @@
 
 </div>
 
-<!-- Script geolocation tetap sama -->
+<!-- Script geolocation -->
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".btn-clockin, .btn-clockout").forEach(btn => {
       btn.addEventListener("click", function () {
-        if (this.disabled) return;
+        if (this.hasAttribute('disabled')) return;
+
         const form = this.closest("form");
         navigator.geolocation.getCurrentPosition(pos => {
           form.querySelector(".lat").value = pos.coords.latitude;
           form.querySelector(".lon").value = pos.coords.longitude;
           form.submit();
-        }, err => alert("Gagal ambil lokasi: " + err.message));
+        }, err => {
+          alert("Gagal mengambil lokasi: " + err.message + "\nPastikan GPS aktif dan izinkan lokasi.");
+        });
       });
     });
   });

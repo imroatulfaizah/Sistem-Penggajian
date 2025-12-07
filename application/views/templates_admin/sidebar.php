@@ -54,19 +54,19 @@
         </div>
       </li>
       <!-- Nav Item - Pages Collapse Menu -->
-      <li class="nav-item active">
+      <!-- <li class="nav-item active">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
           <i class="far fa-fw fa-copy"></i>
           <span>Laporan</span>
         </a>
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item" href="<?= base_url('admin/laporanGaji'); ?>">Laporan Gaji</a>
-            <a class="collapse-item" href="<?= base_url('admin/laporanAbsensi'); ?>">Laporan Absensi</a>
-            <a class="collapse-item" href="<?= base_url('admin/slipGaji'); ?>">Slip Gaji</a>
+            <a class="collapse-item" href="<= base_url('admin/laporanGaji'); ?>">Laporan Gaji</a>
+            <a class="collapse-item" href="<= base_url('admin/laporanAbsensi'); ?>">Laporan Absensi</a>
+            <a class="collapse-item" href="<= base_url('admin/slipGaji'); ?>">Slip Gaji</a>
           </div>
         </div>
-      </li>
+      </li> -->
       <li class="nav-item active">
         <a class="nav-link" href="<?= base_url('admin/GantiPassword'); ?>">
           <i class="fas fa-fw fa-lock"></i>

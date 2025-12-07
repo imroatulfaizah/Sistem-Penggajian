@@ -33,7 +33,7 @@
         </div>
       </li>
       <!-- Nav Item - Pages Collapse Menu -->
-      <li class="nav-item active">
+      <!-- <li class="nav-item active">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
           <i class="far fa-fw fa-copy"></i>
           <span>Laporan</span>
@@ -45,7 +45,7 @@
             <a class="collapse-item" href="<?= base_url('bendahara/slipGaji'); ?>">Slip Gaji</a>
           </div>
         </div>
-      </li>
+      </li> -->
       <li class="nav-item active">
         <a class="nav-link" href="<?= base_url('bendahara/GantiPassword'); ?>">
           <i class="fas fa-fw fa-lock"></i>

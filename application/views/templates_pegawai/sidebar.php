@@ -35,6 +35,12 @@
       </li>
 
       <li class="nav-item active">
+        <a class="nav-link" href="<?= base_url('pegawai/ijin'); ?>">
+          <i class="fas fa-calendar-check"></i> Ajukan Ijin/Cuti
+        </a>
+      </li>
+
+      <li class="nav-item active">
         <a class="nav-link" href="<?= base_url('pegawai/dataGaji'); ?>">
           <i class="fas fa-fw fa-money-check-alt"></i>
           <span>Data Gaji</span></a>

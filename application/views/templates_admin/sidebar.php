@@ -39,6 +39,11 @@
           <i class="fas fa-fw fa-money-check-alt"></i>
           <span>Generate QR Code</span></a>
       </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="<?= base_url('admin/ijin'); ?>">
+          <i class="fas fa-tasks"></i> Kelola Ijin Pegawai
+        </a>
+      </li>
       <!-- Nav Item - Utilities Collapse Menu -->
       <li class="nav-item active">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">

@@ -1,70 +1,69 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 class DataGaji extends CI_Controller
 {
-
     public function __construct()
     {
         parent::__construct();
         if ($this->session->userdata('hak_akses') != '2') {
-            $this->session->set_flashdata('pesan', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <strong>Anda belum login!</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-            </div>');
+            $this->session->set_flashdata('pesan', '<div class="alert alert-danger">Akses ditolak!</div>');
             redirect('welcome');
         }
+        $this->load->helper('nama_bulan');
     }
 
     public function index()
     {
-        $data['title'] = "Data Gaji";
+        $data['title'] = "Data Gaji Saya";
         $nip = $this->session->userdata('nip');
 
-        // Insentif
-        $data['insentif'] = $this->db->query("
-            SELECT SUM(nominal) AS jumlah_insentif 
-            FROM data_insentif 
-            WHERE nip = '$nip'
-        ")->result();
+        $bulan = $this->input->get('bulan') ?: date('m');
+        $tahun = $this->input->get('tahun') ?: date('Y');
+        $bulanTahun = $bulan . $tahun;
 
-        // Kehadiran
-        $data['kehadiran'] = $this->db->query("
-            SELECT hadir 
-            FROM data_kehadiran 
-            WHERE nip = '$nip'
-        ")->result();
+        $data['selected_bulan'] = $bulan;
+        $data['selected_tahun'] = $tahun;
 
-        // Total Jam
-        $data['jam'] = $this->db->query("
-            SELECT SUM(total_jam) AS total_jam 
-            FROM data_penempatan 
-            WHERE nip = '$nip'
-        ")->result();
-
-        // Gaji + Periode Jabatan
-        $data['gaji'] = $this->db->query("
+        // Query yang AMAN: tidak pakai kolom sakit/izin/alfa yang tidak ada
+        $sql = "
             SELECT 
-                data_pegawai.nama_pegawai,
-                data_pegawai.nip,
-                djp.tunjangan_jabatan,
-                djp.tunjangan_transport,
-                djp.upah_mengajar,
-                data_kehadiran.alpha,
-                data_kehadiran.bulan,
-                data_kehadiran.id_kehadiran
-            FROM data_pegawai
-            INNER JOIN data_kehadiran 
-                ON data_kehadiran.nip = data_pegawai.nip 
-            INNER JOIN data_jabatan 
-                ON data_jabatan.id_jabatan = data_pegawai.jabatan
-            INNER JOIN data_jabatan_periode djp
-                ON djp.id_jabatan = data_jabatan.id_jabatan
-                AND djp.valid_to IS NULL   -- ambil periode yang masih berlaku
-            WHERE data_kehadiran.nip = '$nip'
-            ORDER BY data_kehadiran.bulan DESC
-        ")->result();
+                dk.hadir,
+                dp.nama_pegawai,
+                dp.jenis_kelamin,
+                j.nama_jabatan,
+
+                COALESCE(p.tunjangan_jabatan, 0) AS tunjangan_jabatan,
+                COALESCE(p.tunjangan_transport, 0) AS tunjangan_transport,
+                COALESCE(p.upah_mengajar, 0) AS upah_mengajar,
+
+                COALESCE(ins.total_insentif, 0) AS total_insentif,
+
+                (
+                    SELECT COALESCE(SUM(am.total_jam), 0)
+                    FROM absensi_mengajar am
+                    JOIN data_penempatan pen ON am.id_penempatan = pen.id_penempatan
+                    WHERE pen.nip = ? AND DATE_FORMAT(am.jam_clockin, '%m%Y') = ?
+                ) AS total_jam_mengajar
+
+            FROM data_kehadiran dk
+            JOIN data_pegawai dp ON dk.nip = dp.nip
+            JOIN data_jabatan j ON dp.jabatan = j.id_jabatan
+            LEFT JOIN data_jabatan_periode p 
+                ON p.id_jabatan = j.id_jabatan AND p.valid_to IS NULL
+            LEFT JOIN (
+                SELECT nip, SUM(nominal) AS total_insentif
+                FROM data_insentif 
+                WHERE is_paid = '0' 
+                GROUP BY nip
+            ) ins ON ins.nip = dk.nip
+            WHERE dk.nip = ? AND dk.bulan = ?
+        ";
+
+        $data['gaji'] = $this->db->query($sql, [
+            $nip, $bulanTahun,
+            $nip, $bulanTahun
+        ])->row();
 
         $this->load->view('templates_pegawai/header', $data);
         $this->load->view('templates_pegawai/sidebar');
@@ -72,52 +71,55 @@ class DataGaji extends CI_Controller
         $this->load->view('templates_pegawai/footer');
     }
 
-    public function cetakSlip($nip, $bulan)
+    public function cetakSlip($bulanTahun = null)
     {
-        $data['title'] = "Cetak Slip Gaji";
+        $nip = $this->session->userdata('nip');
+        $bulanTahun = $bulanTahun && strlen($bulanTahun) == 6 ? $bulanTahun : date('mY');
 
-        // Insentif
-        $data['insentif'] = $this->db->query("
-            SELECT SUM(nominal) AS jumlah_insentif 
-            FROM data_insentif 
-            WHERE nip = '$nip'
-        ")->result();
+        $data['title'] = "Slip Gaji - " . nama_bulan($bulanTahun);
 
-        // Kehadiran
-        $data['kehadiran'] = $this->db->query("
-            SELECT hadir 
-            FROM data_kehadiran 
-            WHERE nip = '$nip'
-        ")->result();
-
-        // Jam mengajar
-        $data['jam'] = $this->db->query("
-            SELECT SUM(total_jam) AS total_jam 
-            FROM data_penempatan 
-            WHERE nip = '$nip'
-        ")->result();
-
-        // Data slip gaji + tunjangan dari table periode
-        $data['print_slip'] = $this->db->query("
+        $sql = "
             SELECT 
-                data_pegawai.nip, 
-                data_pegawai.nama_pegawai, 
-                data_jabatan.nama_jabatan,
-                djp.tunjangan_jabatan,
-                djp.tunjangan_transport,
-                djp.upah_mengajar,
-                data_kehadiran.alpha,
-                data_kehadiran.bulan
-            FROM data_pegawai
-            INNER JOIN data_kehadiran 
-                ON data_kehadiran.nip = data_pegawai.nip AND data_kehadiran.bulan = $bulan
-            INNER JOIN data_jabatan 
-                ON data_jabatan.id_jabatan = data_pegawai.jabatan
-            INNER JOIN data_jabatan_periode djp
-                ON djp.id_jabatan = data_jabatan.id_jabatan
-                AND djp.valid_to IS NULL
-            WHERE data_pegawai.nip = '$nip'
-        ")->result();
+                dp.nip, 
+                dp.nama_pegawai, 
+                dp.jenis_kelamin,
+                j.nama_jabatan,
+
+                COALESCE(p.tunjangan_jabatan, 0) AS tunjangan_jabatan,
+                COALESCE(p.tunjangan_transport, 0) AS tunjangan_transport,
+                COALESCE(p.upah_mengajar, 0) AS upah_mengajar,
+
+                dk.hadir,
+                dk.bulan,  -- TAMBAHAN INI YANG PENTING!
+
+                COALESCE(ins.total_insentif, 0) AS total_insentif,
+
+                (
+                    SELECT COALESCE(SUM(am.total_jam), 0)
+                    FROM absensi_mengajar am
+                    JOIN data_penempatan pen ON am.id_penempatan = pen.id_penempatan
+                    WHERE pen.nip = ? AND DATE_FORMAT(am.jam_clockin, '%m%Y') = ?
+                ) AS total_jam_mengajar
+
+            FROM data_pegawai dp
+            JOIN data_kehadiran dk ON dk.nip = dp.nip AND dk.bulan = ?
+            JOIN data_jabatan j ON dp.jabatan = j.id_jabatan
+            LEFT JOIN data_jabatan_periode p ON p.id_jabatan = j.id_jabatan AND p.valid_to IS NULL
+            LEFT JOIN (
+                SELECT nip, SUM(nominal) AS total_insentif
+                FROM data_insentif WHERE is_paid = '0' GROUP BY nip
+            ) ins ON ins.nip = dp.nip
+            WHERE dp.nip = ?
+        ";
+
+        $data['slip'] = $this->db->query($sql, [
+            $nip, $bulanTahun,
+            $bulanTahun, $nip
+        ])->row();
+
+        if (!$data['slip']) {
+            show_error('Data gaji tidak ditemukan untuk bulan ini.', 404);
+        }
 
         $this->load->view('templates_pegawai/header', $data);
         $this->load->view('pegawai/cetakSlipGaji', $data);

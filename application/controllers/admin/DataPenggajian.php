@@ -16,14 +16,23 @@ class DataPenggajian extends CI_Controller
 
     private function getBulanTahunFromRequest()
     {
+        // Prioritas 1: dari GET
         if (!empty($_GET['bulan']) && !empty($_GET['tahun'])) {
-            return [
-                $this->input->get('bulan', true),
-                $this->input->get('tahun', true),
-                $this->input->get('bulan', true) . $this->input->get('tahun', true)
-            ];
+            $b = $_GET['bulan'];
+            $t = $_GET['tahun'];
         }
-        return [date('m'), date('Y'), date('mY')];
+        // Prioritas 2: dari URI segment (untuk printSlip)
+        elseif ($this->uri->segment(5) && $this->uri->segment(6)) {
+            $b = $this->uri->segment(5);
+            $t = $this->uri->segment(6);
+        }
+        // Fallback
+        else {
+            $b = date('m');
+            $t = date('Y');
+        }
+
+        return [$b, $t, $b . $t];
     }
 
     // ============================================================
@@ -123,6 +132,7 @@ class DataPenggajian extends CI_Controller
     // ============================================================
     public function printSlip($nip, $bulan, $tahun)
     {
+
         $data['title'] = "Cetak Slip Gaji";
         list($bulan, $tahun, $bulanTahun) = $this->getBulanTahunFromRequest();
 
@@ -156,7 +166,7 @@ class DataPenggajian extends CI_Controller
                 djp.tunjangan_jabatan,
                 djp.tunjangan_transport,
                 djp.upah_mengajar,
-                data_kehadiran.alpha,
+                data_kehadiran.izin,
                 data_kehadiran.bulan
             FROM data_pegawai
             INNER JOIN data_kehadiran 

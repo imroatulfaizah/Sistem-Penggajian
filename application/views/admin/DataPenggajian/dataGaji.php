@@ -67,18 +67,6 @@
     </div>
   </div>
 
-  <?php
-  if ((isset($_GET['bulan']) && $_GET['bulan'] != '') && (isset($_GET['tahun']) && $_GET['tahun'] != '')) {
-    $bulan = $_GET['bulan'];
-    $tahun = $_GET['tahun'];
-    $bulanTahun = $bulan . $tahun;
-  } else {
-    $bulan = date('m');
-    $tahun = date('Y');
-    $bulanTahun = $bulan . $tahun;
-  }
-  ?>
-
   <div class="alert alert-info">
     Menampilkan data gaji pegawai bulan: <span class="font-weight-bold"><?= $bulan; ?></span> tahun: <span class="font-weight-bold"><?= $tahun; ?></span>
   </div>

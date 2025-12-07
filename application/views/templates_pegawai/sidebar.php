@@ -36,7 +36,7 @@
 
       <li class="nav-item active">
         <a class="nav-link" href="<?= base_url('pegawai/ijin'); ?>">
-          <i class="fas fa-calendar-check"></i> Ajukan Ijin/Cuti
+          <i class="fas fa-fw fa-calendar-check"></i><span>Ajukan Ijin/Cuti</span>
         </a>
       </li>
 

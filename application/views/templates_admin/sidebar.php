@@ -41,7 +41,7 @@
       </li>
       <li class="nav-item active">
         <a class="nav-link" href="<?= base_url('admin/ijin'); ?>">
-          <i class="fas fa-tasks"></i> Kelola Ijin Pegawai
+          <i class="fas fa-fw fa-tasks"></i><span>Kelola Ijin Pegawai</span>
         </a>
       </li>
       <!-- Nav Item - Utilities Collapse Menu -->

@@ -78,6 +78,38 @@ class DataPenggajian extends CI_Controller
         $offset = ($this->input->get('page')) ? $this->input->get('page') : 0;
 
         // Query utama
+        // $sql = "
+        //     SELECT 
+        //         a.*,
+        //         b.nama_pegawai,
+        //         b.jenis_kelamin,
+
+        //         j.nama_jabatan,
+
+        //         COALESCE(p.tunjangan_jabatan, 0) AS tunjangan_jabatan,
+        //         COALESCE(p.tunjangan_transport, 0) AS tunjangan_transport,
+        //         COALESCE(p.upah_mengajar, 0) AS upah_mengajar,
+
+        //         (
+        //             SELECT COALESCE(SUM(am.total_jam),0)
+        //             FROM absensi_mengajar am
+        //             JOIN data_penempatan dp2 ON am.id_penempatan = dp2.id_penempatan
+        //             WHERE dp2.nip = a.nip
+        //             AND DATE_FORMAT(am.jam_clockin, '%m%Y') = ?
+        //         ) AS total_jam
+
+        //     FROM data_kehadiran a
+        //     JOIN data_pegawai b ON a.nip = b.nip
+        //     JOIN data_jabatan j ON b.jabatan = j.id_jabatan
+
+        //     LEFT JOIN data_jabatan_periode p 
+        //         ON p.id_jabatan = j.id_jabatan
+        //         AND p.valid_to IS NULL
+
+        //     WHERE a.bulan = ?
+        //     ORDER BY b.nama_pegawai ASC
+        //     LIMIT ? OFFSET ?
+        // ";
         $sql = "
             SELECT 
                 a.*,
@@ -91,12 +123,19 @@ class DataPenggajian extends CI_Controller
                 COALESCE(p.upah_mengajar, 0) AS upah_mengajar,
 
                 (
-                    SELECT COALESCE(SUM(am.total_jam),0)
+                    SELECT COALESCE(SUM(am.total_jam), 0)
                     FROM absensi_mengajar am
                     JOIN data_penempatan dp2 ON am.id_penempatan = dp2.id_penempatan
                     WHERE dp2.nip = a.nip
                     AND DATE_FORMAT(am.jam_clockin, '%m%Y') = ?
-                ) AS total_jam
+                ) AS total_jam,
+
+                (
+                    SELECT COALESCE(SUM(di.nominal), 0)
+                    FROM data_insentif di
+                    WHERE di.nip = a.nip
+                    AND di.is_paid = '0'          -- hanya yang belum dibayar
+                ) AS total_insentif
 
             FROM data_kehadiran a
             JOIN data_pegawai b ON a.nip = b.nip

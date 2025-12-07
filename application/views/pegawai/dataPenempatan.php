@@ -10,6 +10,24 @@
     <i class="fas fa-print"></i> Print Data
   </a>
 
+  <!-- MODE TESTING RADIUS (sama seperti di halaman absensi harian) -->
+  <div class="row mb-3">
+    <div class="col-md-12 text-center">
+      <?php if ($this->session->userdata('testing_radius')): ?>
+        <div class="alert alert-warning d-inline-block">
+          <strong>MODE TESTING RADIUS AKTIF!</strong> Anda bisa Clock-In/Out dari mana saja (tanpa batas radius).<br>
+          <a href="<?= base_url('pegawai/DataAbsensi/set_radius_mode/normal') ?>" class="btn btn-sm btn-secondary mt-2">
+            Matikan Mode Testing
+          </a>
+        </div>
+      <?php else: ?>
+        <a href="<?= base_url('pegawai/DataAbsensi/set_radius_mode/unlimited') ?>" class="btn btn-sm btn-outline-warning">
+          Aktifkan Mode Testing Radius (Bypass 100m)
+        </a>
+      <?php endif; ?>
+    </div>
+  </div>
+
   <?= $this->session->flashdata('pesan'); ?>
 
   <!-- FILTER PER HARI -->

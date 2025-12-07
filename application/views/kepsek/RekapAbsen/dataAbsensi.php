@@ -1,110 +1,106 @@
-<!-- Begin Page Content -->
-<div class="container-fluid" style="margin-bottom: 100px;">
-  <?= $this->session->flashdata('pesan'); ?>
-  <!-- Page Heading -->
-  <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800"><?= $title; ?></h1>
-  </div>
+<?php
+$nama_bulan = ["", "Januari","Februari","Maret","April","Mei","Juni",
+               "Juli","Agustus","September","Oktober","November","Desember"];
+?>
 
-  <div class="card mb-3">
-    <div class="card-header bg-primary text-white">
-      Filter Data Absensi Pegawai
+<div class="container-fluid">
+
+    <?= $this->session->flashdata('pesan'); ?>
+
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800"><?= $title; ?></h1>
     </div>
-    <div class="card-body">
-      <form class="form-inline">
-        <div class="form-group mb-2">
-          <label for="">Bulan : </label>
-          <select name="bulan" id="" class="form-control ml-2">
-            <option value="">--Pilih Bulan--</option>
-            <option value="01">Januari</option>
-            <option value="02">Februari</option>
-            <option value="03">Maret</option>
-            <option value="04">April</option>
-            <option value="05">Mei</option>
-            <option value="06">Juni</option>
-            <option value="07">Juli</option>
-            <option value="08">Agustus</option>
-            <option value="09">September</option>
-            <option value="10">Oktober</option>
-            <option value="11">November</option>
-            <option value="12">Desember</option>
-          </select>
+
+    <!-- Filter -->
+    <div class="card shadow mb-4">
+        <div class="card-header bg-primary text-white">
+            Filter Data Absensi Pegawai
         </div>
-        <div class="form-group mb-2 ml-5">
-          <label for="">Tahun : </label>
-          <select name="tahun" id="" class="form-control ml-2">
-            <option value="">--Pilih Tahun--</option>
-            <?php
-            $tahun = date('Y');
-            for ($i = 2021; $i < $tahun + 5; $i++) { ?>
-              <option value="<?= $i; ?>"><?= $i; ?></option>
-            <?php } ?>
-          </select>
+        <div class="card-body">
+            <form class="form-inline" method="get">
+                <div class="form-group mb-2 mr-3">
+                    <label class="mr-2">Bulan :</label>
+                    <select name="bulan" class="form-control">
+                        <option value="">-- Pilih Bulan --</option>
+                        <?php for($i=1;$i<=12;$i++):
+                            $val = sprintf("%02d",$i);
+                            $selected = ($bulan_selected == $val) ? 'selected' : '';
+                        ?>
+                            <option value="<?= $val ?>" <?= $selected ?>><?= $nama_bulan[$i] ?></option>
+                        <?php endfor; ?>
+                    </select>
+                </div>
+
+                <div class="form-group mb-2 mr-3">
+                    <label class="mr-2">Tahun :</label>
+                    <select name="tahun" class="form-control">
+                        <option value="">-- Pilih Tahun --</option>
+                        <?php for($i=date('Y')-5;$i<=date('Y')+5;$i++): ?>
+                            <option value="<?= $i ?>" <?= ($tahun_selected == $i) ? 'selected' : '' ?>><?= $i ?></option>
+                        <?php endfor; ?>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary mb-2">
+                    Tampilkan
+                </button>
+            </form>
         </div>
-        <button type="submit" class="btn btn-primary mb-2 ml-auto"><i class="fas fa-eye"></i> Tampilkan Data</button>
-      </form>
     </div>
-  </div>
 
-  <?php
-  if ((isset($_GET['bulan']) && $_GET['bulan'] != '') && (isset($_GET['tahun']) && $_GET['tahun'] != '')) {
-    $bulan = $_GET['bulan'];
-    $tahun = $_GET['tahun'];
-    $bulanTahun = $bulan . $tahun;
-  } else {
-    $bulan = date('m');
-    $tahun = date('Y');
-    $bulanTahun = $bulan . $tahun;
-  }
-  ?>
+    <!-- Info Periode -->
+    <div class="alert alert-info">
+        Menampilkan data kehadiran pegawai bulan 
+        <strong><?= $nama_bulan[(int)$bulan_selected] ?></strong> 
+        tahun <strong><?= $tahun_selected ?></strong>
+    </div>
 
-  <div class="alert alert-info">
-    Menampilkan data kehadiran pegawai bulan: <span class="font-weight-bold"><?= $bulan; ?></span> tahun: <span class="font-weight-bold"><?= $tahun; ?></span>
-  </div>
+    <?php if (!empty($absensi)): ?>
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead class="thead-dark">
+                            <tr class="text-center">
+                                <th width="5%">No</th>
+                                <th>NIP</th>
+                                <th>Nama Pegawai</th>
+                                <th>Jenis Kelamin</th>
+                                <th>Jabatan</th>
+                                <th>Hadir</th>
+                                <th>Izin / Tidak Hadir</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php 
+                            $no = ($this->input->get('page') ? $this->input->get('page') : 0) + 1;
+                            foreach ($absensi as $a): 
+                            ?>
+                                <tr>
+                                    <td class="text-center"><?= $no++ ?></td>
+                                    <td><?= $a->nip ?></td>
+                                    <td><?= $a->nama_pegawai ?></td>
+                                    <td><?= $a->jenis_kelamin ?></td>
+                                    <td><?= $a->jabatan ?></td>
+                                    <td class="text-center text-success font-weight-bold"><?= $a->hadir ?></td>
+                                    <td class="text-center text-danger font-weight-bold"><?= $a->izin ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
 
-  <?php
-  $jml_data = count($absensi);
-  if ($jml_data > 0) { ?>
+                <!-- PAGINATION – persis seperti DataPenempatan -->
+                <div class="mt-4">
+                    <?= $pagination; ?>
+                </div>
 
-    <table class="table table-bordered table-striped">
-      <tr>
-        <td class="text-center">No</td>
-        <td class="text-center">NIP</td>
-        <td class="text-center">Nama Pegawai</td>
-        <td class="text-center">Jenis Kelamin</td>
-        <td class="text-center">Jabatan</td>
-        <td class="text-center">Hadir</td>
-        <td class="text-center">Sakit</td>
-        <td class="text-center">Izin</td>
-        <td class="text-center">Alpha</td>
-        <th class="text-center">Action</th>
-      </tr>
-      <?php
-      $no = 1;
-      foreach ($absensi as $a) : ?>
-        <tr>
-          <td><?= $no++; ?></td>
-          <td><?= $a->nip; ?></td>
-          <td><?= $a->nama_pegawai; ?></td>
-          <td><?= $a->jenis_kelamin; ?></td>
-          <td><?= $a->jabatan; ?></td>
-          <td><?= $a->hadir; ?></td>
-          <td><?= $a->izin; ?></td>
-          <td>
-            <center>
-              <!--<a class="btn btn-sm btn-primary" href="<?= base_url('kepsek/dataAbsensi/updateData/' . $a->id_kehadiran); ?>"><i class="fas fa-edit"></i></a>-->
-              <a onclick="return confirm('Yakin hapus?')" class="btn btn-sm btn-danger" href="<?= base_url('kepsek/dataAbsensi/deleteData/' . $a->id_kehadiran); ?>"><i class="fas fa-trash"></i></a>
-            </center>
-          </td>
-        </tr>
-      <?php endforeach; ?>
-    </table>
-
-  <?php } else { ?>
-    <span class="badge badge-danger"><i class="fas fa-info-circle"></i> Data masih kosong, silahkan input data kehadiran pada bulan dan tahun yang anda pilih!</span>
-  <?php } ?>
-
-
-
+            </div>
+        </div>
+    <?php else: ?>
+        <div class="alert alert-warning text-center shadow">
+            <strong>Data absensi masih kosong</strong> untuk periode yang dipilih.
+        </div>
+    <?php endif; ?>
 
 </div>

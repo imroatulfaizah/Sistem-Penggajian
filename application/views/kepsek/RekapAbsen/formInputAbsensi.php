@@ -72,9 +72,7 @@
         <td class="text-center">Jenis Kelamin</td>
         <td class="text-center">Jabatan</td>
         <td class="text-center" width="10%;">Hadir</td>
-        <td class="text-center" width="10%;">Sakit</td>
-        <td class="text-center" width="10%;">Izin</td>
-        <td class="text-center" width="10%;">Alpha</td>
+        <td class="text-center" width="10%;">Tidak Hadir</td>
       </tr>
 
       <?php

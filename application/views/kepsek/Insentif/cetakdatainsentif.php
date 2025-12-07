@@ -29,7 +29,7 @@
     <table class="table table-bordered table-striped">
         <tr>
         <th class="text-center">No</th>
-        <th class="text-center">ID Pegawai</th>
+        <th class="text-center">NIP</th>
         <th class="text-center">Nama Insentif</th>
         <th class="text-center">Nominal Tunjangan</th>
         <th class="text-center">Status Pembayaran</th>
@@ -39,7 +39,7 @@
         foreach ($insentif as $j) : ?>
             <tr>
                 <td><?= $no++; ?></td>
-                <td><?= $j->id_pegawai; ?></td>
+                <td><?= $j->nip; ?></td>
                 <td><?= $j->nama_insentif; ?></td>
                 <td>Rp. <?= number_format($j->nominal, 0, ',', '.'); ?>,-</td>
                 <td>

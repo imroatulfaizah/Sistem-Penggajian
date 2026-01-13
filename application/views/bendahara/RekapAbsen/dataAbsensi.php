@@ -87,6 +87,7 @@
           <td><?= $a->nama_pegawai; ?></td>
           <td><?= $a->jenis_kelamin; ?></td>
           <td><?= $a->jabatan; ?></td>
+          <td><?= $a->hadir; ?></td>
           <td><?= $a->izin; ?></td>
           <td>
             <center>

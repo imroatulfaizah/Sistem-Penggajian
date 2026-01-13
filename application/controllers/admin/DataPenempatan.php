@@ -154,11 +154,18 @@ class Datapenempatan extends CI_Controller
         $data['kelas']     = $this->db->get('data_kelas')->result();
         $data['pegawai']   = $this->db->where('hak_akses', 2)->get('data_pegawai')->result();
         $data['akademik']  = $this->db->get('data_akademik')->result();
-        $data['penempatan']= $this->db->get_where('data_penempatan', ['id_penempatan' => $id])->row();
+        $data['penempatan']= $this->db
+            ->get_where('data_penempatan', ['id_penempatan' => $id])
+            ->row();
+
+        // JIKA DATA TIDAK ADA
+        if (!$data['penempatan']) {
+            show_404();
+        }
 
         $this->load->view('templates_admin/header', $data);
         $this->load->view('templates_admin/sidebar');
-        $this->load->view('admin/Penempatan/updateDatapenempatan', $data);
+        $this->load->view('admin/Penempatan/updateDataPenempatan', $data);
         $this->load->view('templates_admin/footer');
     }
 

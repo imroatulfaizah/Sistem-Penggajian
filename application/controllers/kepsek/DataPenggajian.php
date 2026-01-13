@@ -188,40 +188,46 @@ class DataPenggajian extends CI_Controller
     // CETAK SEMUA DATA GAJI (PDF/Print)
     // ============================================================
     public function cetakGaji()
-    {
-        $data['title'] = "Cetak Data Gaji Pegawai";
-        list($bulan, $tahun, $bulanTahun) = $this->getBulanTahunFromRequest();
+{
+    $data['title'] = "Cetak Slip Gaji Pegawai";
+    list($bulan, $tahun, $bulanTahun) = $this->getBulanTahunFromRequest();
 
-        $sql = "
-            SELECT 
-                dp.nip,
-                dp.nama_pegawai,
-                dp.jenis_kelamin,
-                j.nama_jabatan,
-                COALESCE(p.tunjangan_jabatan,0) AS tunjangan_jabatan,
-                COALESCE(p.tunjangan_transport,0) AS tunjangan_transport,
-                COALESCE(p.upah_mengajar,0) AS upah_mengajar,
-                dk.hadir,
-                (
-                    SELECT COALESCE(SUM(am.total_jam),0)
-                    FROM absensi_mengajar am
-                    JOIN data_penempatan pen ON am.id_penempatan = pen.id_penempatan
-                    WHERE pen.nip = dp.nip
-                      AND DATE_FORMAT(am.jam_clockin, '%m%Y') = ?
-                ) AS total_jam
-            FROM data_pegawai dp
-            JOIN data_kehadiran dk ON dk.nip = dp.nip 
-            JOIN data_jabatan j ON j.id_jabatan = dp.jabatan
-            LEFT JOIN data_jabatan_periode p
-                ON p.id_jabatan = j.id_jabatan AND p.valid_to IS NULL
-            WHERE dk.bulan = ?
-            ORDER BY dp.nama_pegawai ASC
-        ";
+    $sql = "
+        SELECT 
+            dp.nip,
+            dp.nama_pegawai,
+            dp.jenis_kelamin,
+            j.nama_jabatan,
+            COALESCE(p.tunjangan_jabatan, 0) AS tunjangan_jabatan,
+            COALESCE(p.tunjangan_transport, 0) AS tunjangan_transport,
+            COALESCE(p.upah_mengajar, 0) AS upah_mengajar,
+            dk.hadir,
+            dk.bulan,
+            COALESCE(ins.total_insentif, 0) AS total_insentif,
+            (
+                SELECT COALESCE(SUM(am.total_jam), 0)
+                FROM absensi_mengajar am
+                JOIN data_penempatan pen ON am.id_penempatan = pen.id_penempatan
+                WHERE pen.nip = dp.nip
+                  AND DATE_FORMAT(am.jam_clockin, '%m%Y') = ?
+            ) AS total_jam_mengajar
+        FROM data_pegawai dp
+        JOIN data_kehadiran dk ON dk.nip = dp.nip AND dk.bulan = ?
+        JOIN data_jabatan j ON dp.jabatan = j.id_jabatan
+        LEFT JOIN data_jabatan_periode p 
+            ON p.id_jabatan = j.id_jabatan AND p.valid_to IS NULL
+        LEFT JOIN (
+            SELECT nip, SUM(nominal) AS total_insentif
+            FROM data_insentif
+            WHERE is_paid = '0'
+            GROUP BY nip
+        ) ins ON ins.nip = dp.nip
+        ORDER BY dp.nama_pegawai ASC
+    ";
 
-        $data['cetakGaji'] = $this->db->query($sql, [$bulanTahun, $bulanTahun])->result();
-        $data['periode']   = nama_bulan($bulanTahun); // untuk ditampilkan di view
+    $data['slips']   = $this->db->query($sql, [$bulanTahun, $bulanTahun])->result();
+    $data['periode'] = nama_bulan($bulanTahun);
 
-        $this->load->view('templates_kepsek/header', $data);
-        $this->load->view('kepsek/DataPenggajian/cetakDataGaji', $data);
-    }
+    $this->load->view('admin/DataPenggajian/cetakDataGaji', $data);
+}
 }
